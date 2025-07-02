@@ -90,9 +90,10 @@
 - [x] On Balance Volume (OBV)
 
 ### 4.3 Custom Indicators
-- [x] Create indicator calculation engine
-- [x] Implement indicator combination logic
-- [x] Create signal generation system
+- [x] Create indicator calculation engine (BaseIndicator class)
+- [x] Implement indicator combination logic (IndicatorManager)
+- [x] Create signal generation system (Weighted aggregation)
+- [x] Market condition detection (trending/ranging/volatile)
 - [ ] Setup indicator parameter optimization
 - [ ] Implement multi-timeframe analysis
 - [ ] Create indicator performance tracking
