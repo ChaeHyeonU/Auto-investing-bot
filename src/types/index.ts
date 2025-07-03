@@ -56,6 +56,24 @@ export interface Asset {
   usdtValue: number;
 }
 
+export interface Trade {
+  id: string;
+  symbol: string;
+  side: 'BUY' | 'SELL';
+  entryPrice: number;
+  exitPrice?: number;
+  quantity: number;
+  pnl?: number;
+  strategy?: string;
+  status: 'OPEN' | 'CLOSED' | 'PARTIAL';
+  entryTime: Date;
+  exitTime?: Date;
+  stopLoss?: number;
+  takeProfit?: number;
+  commission?: number;
+  notes?: string;
+}
+
 // Technical Indicators
 export interface TechnicalIndicator {
   name: string;

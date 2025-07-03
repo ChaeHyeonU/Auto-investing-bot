@@ -1,2 +1,523 @@
 2025-07-04 00:53:14 INFO [IndicatorManager]: Initialized 18 indicators for BTCUSDT
 2025-07-04 00:53:14 INFO [IndicatorManager]: Initialized 18 indicators for BTCUSDT
+2025-07-04 01:10:14 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:14 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:14 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:14 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:14 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:10:14 INFO [TradingEngine]: Daily counters reset
+2025-07-04 01:10:14 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 01:10:14 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 01:10:14 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 01:10:14 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:14 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:14 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:14 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:14 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:14 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:10:56 INFO [TradingEngine]: Daily counters reset
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 01:10:56 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 01:10:56 INFO [TradingEngine]: Strategy removed from trading engine
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: EMERGENCY STOP ACTIVATED
+2025-07-04 01:10:56 ERROR [TradingEngine]: Failed to cancel all orders
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [RiskManager]: Trade rejected by risk management
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [RiskManager]: Trade rejected by risk management
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:10:56 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:10:56 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:10:56 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:10:56 WARN [RiskManager]: Circuit breaker activated
+2025-07-04 01:10:56 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:10:56 WARN [RiskManager]: Circuit breaker activated
+2025-07-04 01:10:56 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Trade tracked by performance monitor
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance monitoring started
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance monitoring stopped
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system started
+2025-07-04 01:10:56 INFO [AlertSystem]: [LOW] Test Alert: This is a test alert
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert sent
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system started
+2025-07-04 01:10:56 INFO [AlertSystem]: [LOW] Trade Executed: Trade executed: BUY 0.1 BTCUSDT at 50000
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert sent
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system started
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert type suppressed
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system started
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system started
+2025-07-04 01:10:56 INFO [AlertSystem]: [LOW] Alert System Test: This is a test alert to verify the alert system is working properly.
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert sent
+2025-07-04 01:10:56 INFO [AlertSystem]: Test alert sent
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:10:56 INFO [TradingEngine]: Daily counters reset
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance monitoring started
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system started
+2025-07-04 01:10:56 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance monitoring stopped
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:10:56 ERROR [TradingEngine]: Failed to start trading engine
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:10:56 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:10:56 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:10:56 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:10:56 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 01:10:56 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:11:26 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:11:26 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:11:56 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:11:56 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:12:26 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:12:26 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:19:29 INFO [TradingEngine]: Daily counters reset
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 01:19:29 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 01:19:29 INFO [TradingEngine]: Strategy removed from trading engine
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: EMERGENCY STOP ACTIVATED
+2025-07-04 01:19:29 ERROR [TradingEngine]: Failed to cancel all orders
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [RiskManager]: Trade rejected by risk management
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [RiskManager]: Trade rejected by risk management
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:19:29 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:19:29 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:19:29 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:19:29 WARN [RiskManager]: Circuit breaker activated
+2025-07-04 01:19:29 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:19:29 WARN [RiskManager]: Circuit breaker activated
+2025-07-04 01:19:29 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Trade tracked by performance monitor
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance monitoring started
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance monitoring stopped
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system started
+2025-07-04 01:19:29 INFO [AlertSystem]: [LOW] Test Alert: This is a test alert
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert sent
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system started
+2025-07-04 01:19:29 INFO [AlertSystem]: [LOW] Trade Executed: Trade executed: BUY 0.1 BTCUSDT at 50000
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert sent
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system started
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert type suppressed
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system started
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system started
+2025-07-04 01:19:29 INFO [AlertSystem]: [LOW] Alert System Test: This is a test alert to verify the alert system is working properly.
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert sent
+2025-07-04 01:19:29 INFO [AlertSystem]: Test alert sent
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:19:29 INFO [TradingEngine]: Daily counters reset
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance monitoring started
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system started
+2025-07-04 01:19:29 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance monitoring stopped
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert system stopped
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 01:19:29 ERROR [TradingEngine]: Failed to start trading engine
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:29 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:19:29 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:19:29 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:19:29 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 01:19:29 WARN [TradingEngine]: Trading engine not running
+2025-07-04 01:19:59 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:19:59 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:20:29 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:20:29 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:20:59 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:20:59 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 01:36:34 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 01:36:34 INFO [AlertSystem]: Alert System initialized
+2025-07-04 01:36:34 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 01:36:34 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 01:36:34 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 06:03:15 INFO [TradingEngine]: Daily counters reset
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 06:03:15 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 06:03:15 INFO [TradingEngine]: Strategy removed from trading engine
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: EMERGENCY STOP ACTIVATED
+2025-07-04 06:03:15 ERROR [TradingEngine]: Failed to cancel all orders
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [RiskManager]: Trade rejected by risk management
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [RiskManager]: Trade rejected by risk management
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 06:03:15 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 06:03:15 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 06:03:15 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 06:03:15 WARN [RiskManager]: Circuit breaker activated
+2025-07-04 06:03:15 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 06:03:15 WARN [RiskManager]: Circuit breaker activated
+2025-07-04 06:03:15 INFO [RiskManager]: Position closed by risk manager
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Trade tracked by performance monitor
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance monitoring started
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance monitoring stopped
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system started
+2025-07-04 06:03:15 INFO [AlertSystem]: [LOW] Test Alert: This is a test alert
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert sent
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system started
+2025-07-04 06:03:15 INFO [AlertSystem]: [LOW] Trade Executed: Trade executed: BUY 0.1 BTCUSDT at 50000
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert sent
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system started
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert type suppressed
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system started
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system started
+2025-07-04 06:03:15 INFO [AlertSystem]: [LOW] Alert System Test: This is a test alert to verify the alert system is working properly.
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert sent
+2025-07-04 06:03:15 INFO [AlertSystem]: Test alert sent
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 06:03:15 INFO [TradingEngine]: Daily counters reset
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading engine started successfully
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance monitoring started
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system started
+2025-07-04 06:03:15 INFO [TradingEngine]: Stopping trading engine...
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading engine stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance monitoring stopped
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert system stopped
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Starting trading engine...
+2025-07-04 06:03:15 ERROR [TradingEngine]: Failed to start trading engine
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:15 INFO [PerformanceMonitor]: Performance Monitor initialized
+2025-07-04 06:03:15 INFO [AlertSystem]: Alert System initialized
+2025-07-04 06:03:15 INFO [RiskManager]: Risk Manager initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Trading Engine initialized
+2025-07-04 06:03:15 INFO [TradingEngine]: Strategy added to trading engine
+2025-07-04 06:03:15 WARN [TradingEngine]: Trading engine not running
+2025-07-04 06:03:45 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 06:03:45 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 06:04:15 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 06:04:15 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 06:04:45 WARN [TradingEngine]: Binance connection unhealthy
+2025-07-04 06:04:45 WARN [TradingEngine]: Binance connection unhealthy
