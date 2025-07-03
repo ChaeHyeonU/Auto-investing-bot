@@ -25,6 +25,20 @@ An advanced cryptocurrency auto-trading system built with TypeScript, React, and
 - **Strategy Comparison**: Performance analysis across multiple strategies
 - **Market Condition Detection**: Trending, ranging, and volatile market identification
 
+### 📝 Automated Trading Journal
+- **Notion Integration**: Automated trade documentation with rich formatting
+- **AI-Powered Analysis**: Intelligent trade reasoning and lessons learned
+- **Daily Summaries**: Comprehensive performance reports with insights
+- **Trade Documentation**: Automatic logging of all trading decisions and outcomes
+- **Performance Tracking**: Historical analysis and pattern recognition
+
+### 🌐 RESTful API & Backend
+- **Express.js Backend**: Comprehensive API for all trading operations
+- **WebSocket Support**: Real-time data streaming for live updates
+- **Trading Endpoints**: Complete CRUD operations for strategies, trades, and portfolio
+- **Analytics API**: Advanced performance and risk analysis endpoints
+- **Notion API**: Automated journal creation and management
+
 ### 🔧 Technical Architecture
 - **TypeScript**: Full type safety across the entire codebase
 - **Next.js 15**: Modern React framework with server-side rendering
@@ -38,6 +52,7 @@ An advanced cryptocurrency auto-trading system built with TypeScript, React, and
 - npm or yarn
 - Binance account with API access
 - OpenAI API key (optional, for AI features)
+- Notion workspace and API key (optional, for trading journal)
 
 ### Installation
 
@@ -66,9 +81,20 @@ An advanced cryptocurrency auto-trading system built with TypeScript, React, and
    
    # OpenAI (optional)
    OPENAI_API_KEY=your_openai_key
+   OPENAI_MODEL=gpt-4
+   
+   # Notion Integration (optional)
+   NOTION_API_KEY=your_notion_api_key
+   NOTION_DATABASE_ID=your_database_id
    
    # Trading Configuration
    TRADING_MODE=paper
+   MAX_TRADE_AMOUNT=100
+   RISK_PERCENTAGE=2
+   DEFAULT_SYMBOLS=BTCUSDT,ETHUSDT,BNBUSDT
+   
+   # Server Configuration
+   PORT=3001
    LOG_LEVEL=info
    ```
 
@@ -84,8 +110,72 @@ An advanced cryptocurrency auto-trading system built with TypeScript, React, and
 
 5. **Start Development Server**
    ```bash
+   # Frontend development server
    npm run dev
+   
+   # Backend API server
+   npm run backend:dev
    ```
+
+## 🌐 API Usage
+
+### Backend Server
+The system includes a comprehensive RESTful API server built with Express.js:
+
+```bash
+# Start the backend server
+npm run backend:dev
+```
+
+### API Endpoints
+
+#### Trading Operations
+- `POST /api/trading/start` - Start trading engine
+- `POST /api/trading/stop` - Stop trading engine
+- `GET /api/trading/status` - Get trading status
+- `POST /api/trading/emergency-stop` - Emergency stop all trading
+
+#### Portfolio Management
+- `GET /api/portfolio` - Get portfolio summary
+- `GET /api/portfolio/positions` - Get active positions
+- `GET /api/portfolio/balance` - Get account balance
+- `GET /api/portfolio/history` - Get portfolio history
+
+#### Strategy Management
+- `GET /api/strategy` - List available strategies
+- `POST /api/strategy/create` - Create new strategy
+- `PUT /api/strategy/:id` - Update strategy
+- `DELETE /api/strategy/:id` - Remove strategy
+
+#### Backtesting
+- `POST /api/backtest/run` - Run backtest
+- `GET /api/backtest/status/:jobId` - Get backtest status
+- `GET /api/backtest/result/:jobId` - Get backtest results
+
+#### Analytics
+- `GET /api/analytics/dashboard` - Get dashboard data
+- `GET /api/analytics/performance/summary` - Performance metrics
+- `GET /api/analytics/risk/assessment` - Risk analysis
+
+#### Notion Integration
+- `POST /api/notion/journal-entry` - Create journal entry
+- `POST /api/notion/daily-summary` - Create daily summary
+- `POST /api/notion/test-connection` - Test Notion connection
+
+### WebSocket Real-time Data
+Connect to `ws://localhost:3001` for real-time updates:
+
+```javascript
+const socket = io('http://localhost:3001');
+
+socket.on('priceUpdate', (data) => {
+  console.log('Price update:', data);
+});
+
+socket.on('tradeExecuted', (data) => {
+  console.log('Trade executed:', data);
+});
+```
 
 ## 🧪 Testing System
 
