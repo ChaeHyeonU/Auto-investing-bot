@@ -265,7 +265,9 @@ export class KeltnerChannels extends BaseIndicator {
   constructor(period: number = 20, atrPeriod: number = 10, multiplier: number = 2) {
     super(`KC_${period}_${atrPeriod}_${multiplier}`, Math.max(period, atrPeriod));
     this.atr = new AverageTrueRange(atrPeriod);
-    // We'll create a simple EMA implementation here to avoid circular imports
+    // Import EMA dynamically to avoid circular dependency
+    const { ExponentialMovingAverage } = require('./movingAverages');
+    this.ema = new ExponentialMovingAverage(period);
     this.multiplier = multiplier;
   }
 

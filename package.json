@@ -10,6 +10,9 @@
     "type-check": "tsc --noEmit",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:quick": "ts-node --project tsconfig.backend.json tests/quickTest.ts",
+    "test:indicators": "ts-node -e \"import('./tests/quickTest').then(m => m.testTechnicalIndicators())\"",
+    "test:strategies": "ts-node -e \"import('./tests/quickTest').then(m => m.testStrategyFactory())\"",
     "backend:dev": "nodemon backend/server.ts",
     "backend:start": "node backend/server.js"
   },
