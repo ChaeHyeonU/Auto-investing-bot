@@ -83,7 +83,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error getting settings', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -157,7 +157,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error updating trading settings', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -193,7 +193,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error getting alert settings', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -249,7 +249,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error adding alert channel', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -289,7 +289,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error removing alert channel', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         channelId: req.params.channelId,
         service: 'SettingsAPI'
@@ -356,7 +356,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error adding alert rule', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -396,7 +396,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error removing alert rule', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         ruleId: req.params.ruleId,
         service: 'SettingsAPI'
@@ -439,7 +439,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error suppressing alert type', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         alertType: req.params.alertType,
         service: 'SettingsAPI'
@@ -469,7 +469,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error testing alert system', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -526,7 +526,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error getting system info', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });
@@ -579,7 +579,7 @@ export default function createSettingsRoutes(
 
     } catch (error) {
       logger.error('Error exporting settings', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'SettingsAPI'
       });

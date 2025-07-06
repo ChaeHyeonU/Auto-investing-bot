@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events';
-import { Portfolio, Position, Order, TradingStrategy } from '@/types';
+import { Portfolio, Position, Order, TradingStrategy, DailyRiskStats, RiskLimits } from '../../../src/types/index';
 import logger from '../../utils/logger';
-import config from '../../config/config';
 
 /**
  * Advanced Risk Management System
@@ -27,17 +26,49 @@ export class RiskManager extends EventEmitter {
   private lastCircuitBreakerReset: Date = new Date();
   private consecutiveLosses: number = 0;
 
-  constructor(initialPortfolio: Portfolio) {
+  constructor(initialPortfolio?: Portfolio) {
     super();
-    this.portfolio = initialPortfolio;
-    this.initializeRiskLimits();
-    this.initializeDailyStats();
+    this.portfolio = initialPortfolio || {
+      totalValue: 10000,
+      totalPnL: 0,
+      totalPnLPercentage: 0,
+      availableBalance: 10000,
+      positions: [],
+      assets: []
+    };
+    this.riskLimits = this.initializeRiskLimits();
+    this.dailyStats = this.initializeDailyStats();
     
     logger.info('Risk Manager initialized', {
       initialPortfolioValue: this.portfolio.totalValue,
-      riskLimits: this.riskLimits,
       service: 'RiskManager'
     });
+  }
+
+  /**
+   * Initialize risk limits
+   */
+  private initializeRiskLimits(): RiskLimits {
+    return {
+      maxPositionSize: 0.1, // 10% of portfolio
+      maxDailyLoss: 0.02, // 2% daily loss limit
+      maxOpenPositions: 10, // Maximum 10 open positions
+      maxDrawdown: 0.1 // 10% maximum drawdown
+    };
+  }
+
+  /**
+   * Initialize daily statistics
+   */
+  private initializeDailyStats(): DailyRiskStats {
+    return {
+      date: new Date(),
+      tradesCount: 0,
+      totalVolume: 0,
+      realizedPnL: 0,
+      unrealizedPnL: 0,
+      maxDrawdown: 0
+    };
   }
 
   /**
@@ -273,8 +304,10 @@ export class RiskManager extends EventEmitter {
         symbol: order.symbol,
         quantity: order.executedQty,
         averagePrice: order.avgPrice || order.price || 0,
+        avgPrice: order.avgPrice || order.price || 0,
         currentPrice: order.avgPrice || order.price || 0,
         pnl: 0,
+        unrealizedPnL: 0,
         pnlPercentage: 0,
         value: order.executedQty * (order.avgPrice || order.price || 0),
         side: order.side === 'BUY' ? 'LONG' : 'SHORT'
@@ -299,7 +332,7 @@ export class RiskManager extends EventEmitter {
     
     // Update daily stats
     this.dailyStats.realizedPnL += finalPnL;
-    this.dailyStats.totalTrades++;
+    this.dailyStats.tradesCount++;
     
     if (finalPnL > 0) {
       this.dailyStats.winningTrades++;
@@ -461,32 +494,6 @@ export class RiskManager extends EventEmitter {
   }
 
   // Helper methods and calculations
-  private initializeRiskLimits(): void {
-    this.riskLimits = {
-      maxPositionSizePercent: 10, // 10% of portfolio per position
-      maxPortfolioHeat: 20, // 20% total risk exposure
-      maxDailyLoss: this.portfolio.totalValue * 0.05, // 5% daily loss limit
-      maxDrawdown: 15, // 15% maximum drawdown
-      maxLeverage: 3, // 3x maximum leverage
-      maxCorrelationRisk: 0.7, // Maximum correlation between positions
-      maxVolatilityThreshold: 5, // 5% daily volatility threshold
-      maxConsecutiveLosses: 5 // 5 consecutive losses trigger circuit breaker
-    };
-  }
-
-  private initializeDailyStats(): void {
-    this.dailyStats = {
-      realizedPnL: 0,
-      unrealizedPnL: 0,
-      totalTrades: 0,
-      winningTrades: 0,
-      losingTrades: 0,
-      largestWin: 0,
-      largestLoss: 0,
-      avgTradeSize: 0,
-      startOfDayBalance: this.portfolio.totalValue
-    };
-  }
 
   private calculatePortfolioHeat(): number {
     let totalHeat = 0;
@@ -584,12 +591,12 @@ export class RiskManager extends EventEmitter {
 
   private updateDailyStats(order: Order): void {
     // Update daily trading statistics
-    this.dailyStats.totalTrades++;
+    this.dailyStats.tradesCount++;
     
     const tradeValue = order.executedQty * (order.avgPrice || order.price || 0);
     this.dailyStats.avgTradeSize = 
-      (this.dailyStats.avgTradeSize * (this.dailyStats.totalTrades - 1) + tradeValue) / 
-      this.dailyStats.totalTrades;
+      (this.dailyStats.avgTradeSize * (this.dailyStats.tradesCount - 1) + tradeValue) / 
+      this.dailyStats.tradesCount;
   }
 
   private checkRiskThresholds(): void {
@@ -638,28 +645,7 @@ interface RiskCheck {
   severity: 'LOW' | 'MEDIUM' | 'HIGH';
 }
 
-interface RiskLimits {
-  maxPositionSizePercent: number;
-  maxPortfolioHeat: number;
-  maxDailyLoss: number;
-  maxDrawdown: number;
-  maxLeverage: number;
-  maxCorrelationRisk: number;
-  maxVolatilityThreshold: number;
-  maxConsecutiveLosses: number;
-}
 
-interface DailyRiskStats {
-  realizedPnL: number;
-  unrealizedPnL: number;
-  totalTrades: number;
-  winningTrades: number;
-  losingTrades: number;
-  largestWin: number;
-  largestLoss: number;
-  avgTradeSize: number;
-  startOfDayBalance: number;
-}
 
 interface VolatilityData {
   dailyVolatility: number;

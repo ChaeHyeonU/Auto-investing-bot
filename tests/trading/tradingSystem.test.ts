@@ -36,7 +36,9 @@ describe('Real-Time Trading System Integration Tests', () => {
           asset: 'USDT',
           free: 10000,
           locked: 0,
-          total: 10000
+          total: 10000,
+          btcValue: 0.25,
+          usdtValue: 10000
         }
       ]
     };
@@ -44,7 +46,7 @@ describe('Real-Time Trading System Integration Tests', () => {
     // Initialize services
     performanceMonitor = new PerformanceMonitor();
     alertSystem = new AlertSystem();
-    riskManager = new RiskManager(mockPortfolio);
+    riskManager = new RiskManager();
     tradingEngine = new TradingEngine();
 
     // Setup event connections
@@ -66,7 +68,7 @@ describe('Real-Time Trading System Integration Tests', () => {
 
     test('should start and stop trading engine', async () => {
       // Mock dependencies
-      jest.spyOn(BinanceService.prototype, 'connect').mockResolvedValue();
+      jest.spyOn(BinanceService.prototype, 'connect').mockResolvedValue(true);
       jest.spyOn(BinanceService.prototype, 'getAccountInfo').mockResolvedValue(mockPortfolio);
       jest.spyOn(BinanceService.prototype, 'disconnect').mockImplementation();
 
@@ -84,21 +86,33 @@ describe('Real-Time Trading System Integration Tests', () => {
         description: 'Test strategy for unit tests',
         isActive: true,
         riskManagement: {
-          stopLoss: 2,
-          takeProfit: 5,
-          maxPositions: 3,
+          maxPositionSize: 1000,
+          maxDrawdown: 10,
+          stopLossPercentage: 2,
+          takeProfitPercentage: 5,
           riskPerTrade: 1
         },
+        indicators: [],
+        rules: [],
         parameters: {},
         performance: {
-          totalReturn: 0,
-          winRate: 0,
           totalTrades: 0,
           winningTrades: 0,
           losingTrades: 0,
+          winRate: 0,
+          totalReturn: 0,
+          totalReturnPercentage: 0,
+          totalPnL: 0,
           maxDrawdown: 0,
-          sharpeRatio: 0
-        }
+          maxDrawdownPercentage: 0,
+          sharpeRatio: 0,
+          profitFactor: 0,
+          avgTradeDuration: 0,
+          startDate: new Date(),
+          endDate: new Date()
+        },
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       tradingEngine.addStrategy(mockStrategy);
@@ -110,13 +124,17 @@ describe('Real-Time Trading System Integration Tests', () => {
 
     test('should process market data correctly', async () => {
       const mockCandle: CandlestickData = {
+        openTime: Date.now(),
         open: 100,
         high: 105,
         low: 95,
         close: 102,
         volume: 1000,
-        timestamp: new Date(),
-        symbol: 'BTCUSDT'
+        closeTime: Date.now() + 60000,
+        quoteAssetVolume: 100000,
+        numberOfTrades: 100,
+        takerBuyBaseAssetVolume: 500,
+        takerBuyQuoteAssetVolume: 50000
       };
 
       // Mock dependencies
@@ -138,7 +156,10 @@ describe('Real-Time Trading System Integration Tests', () => {
         quantity: 1,
         price: 100,
         status: 'FILLED',
+        createdAt: new Date(),
+        updatedAt: new Date(),
         executedQty: 1,
+        cummulativeQuoteQty: 100,
         avgPrice: 100
       });
 
@@ -233,7 +254,10 @@ describe('Real-Time Trading System Integration Tests', () => {
           quantity: 0.1,
           price: 50000,
           status: 'FILLED' as const,
+          createdAt: new Date(),
+          updatedAt: new Date(),
           executedQty: 0.1,
+          cummulativeQuoteQty: 5000,
           avgPrice: 50000
         };
 
@@ -253,21 +277,33 @@ describe('Real-Time Trading System Integration Tests', () => {
         description: 'Test strategy',
         isActive: true,
         riskManagement: {
-          stopLoss: 2,
-          takeProfit: 5,
-          maxPositions: 3,
+          maxPositionSize: 1000,
+          maxDrawdown: 10,
+          stopLossPercentage: 2,
+          takeProfitPercentage: 5,
           riskPerTrade: 1
         },
+        indicators: [],
+        rules: [],
         parameters: {},
         performance: {
-          totalReturn: 0,
-          winRate: 50,
           totalTrades: 10,
           winningTrades: 5,
           losingTrades: 5,
+          winRate: 50,
+          totalReturn: 0,
+          totalReturnPercentage: 0,
+          totalPnL: 0,
           maxDrawdown: 5,
-          sharpeRatio: 1.2
-        }
+          maxDrawdownPercentage: 0,
+          sharpeRatio: 1.2,
+          profitFactor: 0,
+          avgTradeDuration: 0,
+          startDate: new Date(),
+          endDate: new Date()
+        },
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       const mockOrder = {
@@ -278,7 +314,10 @@ describe('Real-Time Trading System Integration Tests', () => {
         quantity: 0.1,
         price: 50000,
         status: 'FILLED' as const,
+        createdAt: new Date(),
+        updatedAt: new Date(),
         executedQty: 0.1,
+        cummulativeQuoteQty: 5000,
         avgPrice: 50000
       };
 
@@ -400,7 +439,7 @@ describe('Real-Time Trading System Integration Tests', () => {
   describe('System Integration Tests', () => {
     test('should integrate all services correctly', async () => {
       // Mock dependencies
-      jest.spyOn(BinanceService.prototype, 'connect').mockResolvedValue();
+      jest.spyOn(BinanceService.prototype, 'connect').mockResolvedValue(true);
       jest.spyOn(BinanceService.prototype, 'getAccountInfo').mockResolvedValue(mockPortfolio);
 
       // Start all services
@@ -452,21 +491,33 @@ describe('Real-Time Trading System Integration Tests', () => {
         description: 'Strategy for integration testing',
         isActive: true,
         riskManagement: {
-          stopLoss: 2,
-          takeProfit: 5,
-          maxPositions: 3,
+          maxPositionSize: 1000,
+          maxDrawdown: 10,
+          stopLossPercentage: 2,
+          takeProfitPercentage: 5,
           riskPerTrade: 1
         },
+        indicators: [],
+        rules: [],
         parameters: {},
         performance: {
-          totalReturn: 0,
-          winRate: 50,
           totalTrades: 0,
           winningTrades: 0,
           losingTrades: 0,
+          winRate: 50,
+          totalReturn: 0,
+          totalReturnPercentage: 0,
+          totalPnL: 0,
           maxDrawdown: 0,
-          sharpeRatio: 0
-        }
+          maxDrawdownPercentage: 0,
+          sharpeRatio: 0,
+          profitFactor: 0,
+          avgTradeDuration: 0,
+          startDate: new Date(),
+          endDate: new Date()
+        },
+        createdAt: new Date(),
+        updatedAt: new Date()
       };
 
       tradingEngine.addStrategy(mockStrategy);

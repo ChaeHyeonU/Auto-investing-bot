@@ -17,6 +17,13 @@ import logger from '../../utils/logger';
  * - Guides strategy optimization and portfolio allocation
  */
 export class PerformanceAnalyzer {
+
+  /**
+   * Analyze backtest results (main public method)
+   */
+  public async analyze(result: BacktestResult): Promise<any> {
+    return PerformanceAnalyzer.analyzeBacktestResult(result);
+  }
   
   /**
    * Analyze complete backtest results

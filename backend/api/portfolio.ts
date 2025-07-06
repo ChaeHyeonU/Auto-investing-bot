@@ -38,10 +38,10 @@ export default function createPortfolioRoutes(
         },
         assets: accountInfo.assets.map(asset => ({
           asset: asset.asset,
-          free: parseFloat(asset.free),
-          locked: parseFloat(asset.locked),
-          total: parseFloat(asset.total),
-          usdValue: parseFloat(asset.total) // This would need price conversion
+          free: parseFloat(asset.free.toString()),
+          locked: parseFloat(asset.locked.toString()),
+          total: parseFloat(asset.total.toString()),
+          usdValue: parseFloat(asset.total.toString()) // This would need price conversion
         })),
         positions: accountInfo.positions,
         performance: {
@@ -67,7 +67,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting portfolio information', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -84,12 +84,12 @@ export default function createPortfolioRoutes(
       const accountInfo = await binanceService.getAccountInfo();
 
       const balances = accountInfo.assets
-        .filter(asset => parseFloat(asset.total) > 0)
+        .filter(asset => parseFloat(asset.total.toString()) > 0)
         .map(asset => ({
           asset: asset.asset,
-          free: parseFloat(asset.free),
-          locked: parseFloat(asset.locked),
-          total: parseFloat(asset.total)
+          free: parseFloat(asset.free.toString()),
+          locked: parseFloat(asset.locked.toString()),
+          total: parseFloat(asset.total.toString())
         }));
 
       res.json({
@@ -107,7 +107,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting account balances', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -170,7 +170,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting performance metrics', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -201,12 +201,12 @@ export default function createPortfolioRoutes(
       if (startTime) queryParams.startTime = Number(startTime);
       if (endTime) queryParams.endTime = Number(endTime);
 
-      const trades = await binanceService.getTradingHistory(queryParams);
+      const trades = await binanceService.getTradeHistory(queryParams);
 
       // Apply offset for pagination (since Binance doesn't support offset)
       const paginatedTrades = trades.slice(Number(offset), Number(offset) + Number(limit));
 
-      const formattedTrades = paginatedTrades.map(trade => ({
+      const formattedTrades = paginatedTrades.map((trade: any) => ({
         id: trade.id,
         symbol: trade.symbol,
         orderId: trade.orderId,
@@ -241,7 +241,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting trade history', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -260,17 +260,17 @@ export default function createPortfolioRoutes(
       // Calculate asset allocation
       const totalValue = accountInfo.totalValue;
       const allocation = accountInfo.assets
-        .filter(asset => parseFloat(asset.total) > 0)
+        .filter(asset => parseFloat(asset.total.toString()) > 0)
         .map(asset => {
-          const value = parseFloat(asset.total); // This would need price conversion
+          const value = parseFloat(asset.total.toString()); // This would need price conversion
           const percentage = (value / totalValue) * 100;
           
           return {
             asset: asset.asset,
             value,
             percentage: Math.round(percentage * 100) / 100,
-            free: parseFloat(asset.free),
-            locked: parseFloat(asset.locked)
+            free: parseFloat(asset.free.toString()),
+            locked: parseFloat(asset.locked.toString())
           };
         })
         .sort((a, b) => b.value - a.value);
@@ -300,7 +300,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting asset allocation', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -318,8 +318,8 @@ export default function createPortfolioRoutes(
 
       const historicalData = performanceMonitor.getHistoricalPerformance(Number(days));
 
-      const timelineData = historicalData.map(data => ({
-        date: data.date,
+      const timelineData: TimelineData[] = historicalData.map(data => ({
+        date: data.date instanceof Date ? data.date.toISOString().split('T')[0] : data.date,
         totalPnL: data.totalPnL,
         dailyPnL: data.dailyPnL,
         cumulativePnL: data.totalPnL, // This could be calculated cumulatively
@@ -362,7 +362,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting P&L timeline', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -425,7 +425,7 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting portfolio statistics', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'
       });
@@ -437,12 +437,21 @@ export default function createPortfolioRoutes(
 }
 
 // Helper functions for data grouping
-function groupDataByWeek(data: any[]): any[] {
+interface TimelineData {
+  date: string;
+  totalPnL: number;
+  dailyPnL: number;
+  cumulativePnL: number;
+  totalTrades: number;
+  winRate: number;
+}
+
+function groupDataByWeek(data: TimelineData[]): TimelineData[] {
   // Implementation for weekly grouping
   return data; // Placeholder
 }
 
-function groupDataByMonth(data: any[]): any[] {
+function groupDataByMonth(data: TimelineData[]): TimelineData[] {
   // Implementation for monthly grouping
   return data; // Placeholder
 }

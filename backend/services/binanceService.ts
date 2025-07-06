@@ -15,7 +15,7 @@ import {
   OrderSide,
   OrderType,
   OrderStatus
-} from '@/types';
+} from '../../src/types';
 
 interface BinanceOrder {
   symbol: string;
@@ -54,12 +54,19 @@ export class BinanceService extends EventEmitter {
 
   private initializeClient(): void {
     try {
-      this.client = Binance({
+      const clientConfig: any = {
         apiKey: config.binance.apiKey,
         apiSecret: config.binance.apiSecret,
-        sandbox: config.binance.testnet,
         recvWindow: config.binance.recvWindow
-      });
+      };
+      
+      // Configure for testnet if needed
+      if (config.binance.testnet) {
+        clientConfig.httpBase = 'https://testnet.binance.vision';
+        clientConfig.wsBase = 'wss://testnet.binance.vision';
+      }
+      
+      this.client = Binance(clientConfig);
 
       logger.info('Binance client initialized', {
         testnet: config.binance.testnet,
@@ -226,6 +233,92 @@ export class BinanceService extends EventEmitter {
       }));
     } catch (error) {
       logger.error('Failed to get klines', { error, symbol, interval, service: 'BinanceService' });
+      throw error;
+    }
+  }
+
+  public async getHistoricalKlines(
+    symbol: string, 
+    interval: string, 
+    startTime: number, 
+    endTime: number, 
+    limit: number = 1000
+  ): Promise<CandlestickData[]> {
+    try {
+      const klines = await this.client.candles({
+        symbol,
+        interval,
+        startTime,
+        endTime,
+        limit
+      });
+
+      return klines.map((kline: any) => ({
+        openTime: kline.openTime,
+        open: parseFloat(kline.open),
+        high: parseFloat(kline.high),
+        low: parseFloat(kline.low),
+        close: parseFloat(kline.close),
+        volume: parseFloat(kline.volume),
+        closeTime: kline.closeTime,
+        quoteAssetVolume: parseFloat(kline.quoteAssetVolume),
+        numberOfTrades: kline.numberOfTrades,
+        takerBuyBaseAssetVolume: parseFloat(kline.takerBuyBaseAssetVolume),
+        takerBuyQuoteAssetVolume: parseFloat(kline.takerBuyQuoteAssetVolume)
+      }));
+    } catch (error) {
+      logger.error('Failed to get historical klines', { error, symbol, interval, startTime, endTime, service: 'BinanceService' });
+      throw error;
+    }
+  }
+
+  public async getTradeHistory(symbol?: string, limit: number = 100): Promise<Order[]> {
+    try {
+      if (config.trading.mode === 'PAPER') {
+        // Return empty array for paper trading
+        return [];
+      }
+
+      // For real trading, fetch actual trade history
+      const trades = await this.client.myTrades({ symbol, limit });
+      
+      return trades.map((trade: any) => ({
+        id: trade.id.toString(),
+        symbol: trade.symbol,
+        side: trade.isBuyer ? 'BUY' : 'SELL',
+        type: 'MARKET',
+        quantity: parseFloat(trade.qty),
+        price: parseFloat(trade.price),
+        status: 'FILLED',
+        createdAt: new Date(trade.time),
+        updatedAt: new Date(trade.time),
+        executedQty: parseFloat(trade.qty),
+        cummulativeQuoteQty: parseFloat(trade.quoteQty),
+        avgPrice: parseFloat(trade.price),
+        pnl: 0 // Would need additional calculation
+      }));
+    } catch (error) {
+      logger.error('Failed to get trade history', { error, symbol, service: 'BinanceService' });
+      return [];
+    }
+  }
+
+  public async getServerTime(): Promise<number> {
+    try {
+      const time = await this.client.time();
+      return time.serverTime;
+    } catch (error) {
+      logger.error('Failed to get server time', { error, service: 'BinanceService' });
+      return Date.now();
+    }
+  }
+
+  public async get24hrTicker(symbol: string): Promise<any> {
+    try {
+      const ticker = await this.client.dailyStats({ symbol });
+      return ticker;
+    } catch (error) {
+      logger.error('Failed to get 24hr ticker', { error, symbol, service: 'BinanceService' });
       throw error;
     }
   }

@@ -76,7 +76,7 @@ export default function createAnalyticsRoutes(
 
     } catch (error) {
       logger.error('Error getting dashboard analytics', {
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : 'Unknown error',
         requestId: (req as any).requestId,
         service: 'AnalyticsAPI'
       });
@@ -151,7 +151,7 @@ export default function createAnalyticsRoutes(
 
     } catch (error) {
       logger.error('Error getting performance summary', {
-        error: error.message,
+        error: error instanceof Error ? error instanceof Error ? error.message : String(error) : String(error),
         requestId: (req as any).requestId,
         service: 'AnalyticsAPI'
       });
@@ -221,7 +221,7 @@ export default function createAnalyticsRoutes(
 
     } catch (error) {
       logger.error('Error getting risk assessment', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'AnalyticsAPI'
       });
@@ -294,7 +294,7 @@ export default function createAnalyticsRoutes(
 
     } catch (error) {
       logger.error('Error getting trade analysis', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'AnalyticsAPI'
       });
@@ -362,7 +362,7 @@ export default function createAnalyticsRoutes(
 
     } catch (error) {
       logger.error('Error getting strategy comparison', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'AnalyticsAPI'
       });
@@ -420,7 +420,7 @@ export default function createAnalyticsRoutes(
 
     } catch (error) {
       logger.error('Error generating custom report', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'AnalyticsAPI'
       });

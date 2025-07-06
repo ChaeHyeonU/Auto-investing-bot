@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { Portfolio, Position, Order, TradingStrategy } from '@/types';
+import { Portfolio, Position, Order, TradingStrategy } from '../../../src/types';
 import logger from '../../utils/logger';
 import config from '../../config/config';
 

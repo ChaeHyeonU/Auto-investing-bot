@@ -1,7 +1,8 @@
 import { EventEmitter } from 'events';
-import { Portfolio, Position, Order, TradingStrategy } from '@/types';
+import { Portfolio, Position, Order, TradingStrategy } from '../../../src/types';
 import logger from '../../utils/logger';
 import config from '../../config/config';
+import { DailyMetrics, AlertThresholds } from '../../../src/types/index';
 
 /**
  * Performance Monitoring Service
@@ -24,12 +25,49 @@ export class PerformanceMonitor extends EventEmitter {
 
   constructor() {
     super();
-    this.initializeAlertThresholds();
-    this.initializeDailyMetrics();
+    this.alertThresholds = this.initializeAlertThresholds();
+    this.dailyMetrics = this.initializeDailyMetrics();
     
     logger.info('Performance Monitor initialized', { 
       service: 'PerformanceMonitor' 
     });
+  }
+
+  /**
+   * Initialize alert thresholds
+   */
+  private initializeAlertThresholds(): AlertThresholds {
+    return {
+      maxDrawdown: 10, // 10%
+      minWinRate: 40, // 40%
+      dailyLossLimit: 5, // 5%
+      minProfitFactor: 1.5,
+      maxDailyLoss: 5,
+      minSharpeRatio: 0.5
+    };
+  }
+
+  /**
+   * Initialize daily metrics
+   */
+  private initializeDailyMetrics(): DailyMetrics {
+    return {
+      date: new Date(),
+      totalTrades: 0,
+      winningTrades: 0,
+      losingTrades: 0,
+      winRate: 0,
+      averageWin: 0,
+      averageLoss: 0,
+      realizedPnL: 0,
+      unrealizedPnL: 0,
+      totalVolume: 0,
+      largestWin: 0,
+      largestLoss: 0,
+      largestUnrealizedGain: 0,
+      largestUnrealizedLoss: 0,
+      totalPositionValue: 0
+    };
   }
 
   /**
@@ -415,14 +453,14 @@ export class PerformanceMonitor extends EventEmitter {
     const alerts: PerformanceAlert[] = [];
 
     // Daily P&L alert
-    if (this.dailyMetrics.realizedPnL < -this.alertThresholds.maxDailyLoss) {
+    if (this.dailyMetrics.realizedPnL < -this.alertThresholds.dailyLossLimit) {
       alerts.push({
         type: 'HIGH_DAILY_LOSS',
         severity: 'HIGH',
         strategyId: 'OVERALL',
         message: `Daily loss ${this.dailyMetrics.realizedPnL.toFixed(2)} exceeds threshold`,
         value: Math.abs(this.dailyMetrics.realizedPnL),
-        threshold: this.alertThresholds.maxDailyLoss
+        threshold: this.alertThresholds.dailyLossLimit
       });
     }
 
@@ -573,39 +611,6 @@ export class PerformanceMonitor extends EventEmitter {
     }
   }
 
-  /**
-   * Initialize alert thresholds
-   */
-  private initializeAlertThresholds(): void {
-    this.alertThresholds = {
-      minWinRate: 45, // 45%
-      minProfitFactor: 1.2,
-      maxDrawdown: 10, // 10%
-      maxDailyLoss: 1000, // $1000
-      minSharpeRatio: 0.5
-    };
-  }
-
-  /**
-   * Initialize daily metrics
-   */
-  private initializeDailyMetrics(): void {
-    this.dailyMetrics = {
-      date: new Date(),
-      totalTrades: 0,
-      winningTrades: 0,
-      losingTrades: 0,
-      realizedPnL: 0,
-      unrealizedPnL: 0,
-      totalVolume: 0,
-      winRate: 0,
-      largestWin: 0,
-      largestLoss: 0,
-      largestUnrealizedGain: 0,
-      largestUnrealizedLoss: 0,
-      totalPositionValue: 0
-    };
-  }
 
   // Risk calculation methods (simplified implementations)
   private calculateSharpeRatio(): number {
@@ -692,21 +697,7 @@ interface PerformanceMetrics {
   lastUpdateTime: Date;
 }
 
-interface DailyMetrics {
-  date: Date;
-  totalTrades: number;
-  winningTrades: number;
-  losingTrades: number;
-  realizedPnL: number;
-  unrealizedPnL: number;
-  totalVolume: number;
-  winRate: number;
-  largestWin: number;
-  largestLoss: number;
-  largestUnrealizedGain: number;
-  largestUnrealizedLoss: number;
-  totalPositionValue: number;
-}
+
 
 interface OverallMetrics {
   totalTrades: number;
@@ -735,13 +726,7 @@ interface PerformanceAlert {
   threshold: number;
 }
 
-interface AlertThresholds {
-  minWinRate: number;
-  minProfitFactor: number;
-  maxDrawdown: number;
-  maxDailyLoss: number;
-  minSharpeRatio: number;
-}
+
 
 interface DrawdownMetrics {
   maxDrawdown: number;

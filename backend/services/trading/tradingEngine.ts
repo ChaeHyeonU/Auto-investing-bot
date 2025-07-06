@@ -11,7 +11,7 @@ import {
   AIAnalysis,
   PriceUpdate,
   TradingEvent 
-} from '@/types';
+} from '../../../src/types';
 import config from '../../config/config';
 import logger from '../../utils/logger';
 
@@ -355,10 +355,14 @@ export class TradingEngine extends EventEmitter {
         return;
       }
 
-      // Place order
+      // Place order (only if not HOLD)
+      if (decision.action === 'HOLD') {
+        return;
+      }
+      
       const order = await this.binanceService.placeOrder(
         symbol,
-        decision.action,
+        decision.action as 'BUY' | 'SELL',
         'MARKET', // Using market orders for simplicity
         positionSize
       );
@@ -465,7 +469,7 @@ export class TradingEngine extends EventEmitter {
   /**
    * Risk management checks
    */
-  private passesRiskChecks(action: 'BUY' | 'SELL', strategy: TradingStrategy): boolean {
+  private passesRiskChecks(action: 'BUY' | 'SELL' | 'HOLD', strategy: TradingStrategy): boolean {
     // Check daily loss limit
     if (this.dailyPnL <= -this.maxDailyLoss) {
       logger.warn('Daily loss limit exceeded', { 
@@ -706,7 +710,7 @@ export class TradingEngine extends EventEmitter {
   }
 
   private calculateTechnicalScore(signalResult: any): number {
-    const signalMap = { 'BUY': 1, 'SELL': -1, 'NEUTRAL': 0 };
+    const signalMap: Record<string, number> = { 'BUY': 1, 'SELL': -1, 'NEUTRAL': 0 };
     return (signalMap[signalResult.signal] || 0) * (signalResult.confidence / 100);
   }
 
@@ -728,8 +732,10 @@ export class TradingEngine extends EventEmitter {
         symbol: order.symbol,
         quantity: order.executedQty,
         averagePrice: order.avgPrice || order.price || 0,
+        avgPrice: order.avgPrice || order.price || 0,
         currentPrice: order.avgPrice || order.price || 0,
         pnl: 0,
+        unrealizedPnL: 0,
         pnlPercentage: 0,
         value: order.executedQty * (order.avgPrice || order.price || 0),
         side: order.side === 'BUY' ? 'LONG' : 'SHORT'

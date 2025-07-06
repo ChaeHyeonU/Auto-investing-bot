@@ -13,13 +13,18 @@
     "test:quick": "ts-node --project tsconfig.backend.json tests/quickTest.ts",
     "test:indicators": "ts-node -e \"import('./tests/quickTest').then(m => m.testTechnicalIndicators())\"",
     "test:strategies": "ts-node -e \"import('./tests/quickTest').then(m => m.testStrategyFactory())\"",
+    "test:integration": "ts-node quick-test.ts",
+    "test:all-systems": "node test-systems.js",
     "backend:dev": "nodemon backend/server.ts",
-    "backend:start": "node backend/server.js"
+    "backend:start": "node backend/server.js",
+    "start:all": "concurrently \"npm run backend:dev\" \"npm run dev\"",
+    "start:prod": "concurrently \"npm run backend:start\" \"npm run start\""
   },
   "dependencies": {
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.1.1",
     "@notionhq/client": "^2.3.0",
+    "@supabase/supabase-js": "^2.50.3",
     "@tanstack/react-query": "^5.20.5",
     "axios": "^1.6.7",
     "binance-api-node": "^0.12.4",

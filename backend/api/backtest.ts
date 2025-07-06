@@ -16,15 +16,32 @@ import logger from '../utils/logger';
  * - Optimizing strategy parameters
  */
 
-export default function createBacktestRoutes(): Router {
+export default function createBacktestRoutes(binanceService: BinanceService): Router {
   const router = Router();
-  const backtestEngine = new BacktestEngine();
+  // BacktestEngine will be created with config when needed
   const strategyFactory = new StrategyFactory();
   const performanceAnalyzer = new PerformanceAnalyzer();
-  const binanceService = new BinanceService();
 
   // Store active backtest jobs
-  const activeJobs = new Map<string, any>();
+  interface BacktestJob {
+    jobId: string;
+    status: 'pending' | 'running' | 'completed' | 'failed';
+    startTime: Date;
+    completedAt?: Date;
+    duration: number;
+    strategyId: string;
+    symbol: string;
+    timeframe: string;
+    startDate: string;
+    endDate: string;
+    initialBalance?: number;
+    parameters?: any;
+    result?: any;
+    error?: string;
+    promise?: Promise<any>;
+  }
+  
+  const activeJobs = new Map<string, BacktestJob>();
 
   /**
    * POST /api/backtest/run
@@ -70,9 +87,17 @@ export default function createBacktestRoutes(): Router {
       // Start backtest asynchronously
       const backtestPromise = runBacktest(config);
       activeJobs.set(jobId, {
-        ...config,
+        jobId,
         status: 'running',
         startTime: new Date(),
+        duration: 0,
+        strategyId,
+        symbol,
+        timeframe,
+        startDate,
+        endDate,
+        initialBalance,
+        parameters,
         promise: backtestPromise
       });
 
@@ -107,7 +132,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error starting backtest', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'BacktestAPI'
       });
@@ -138,7 +163,7 @@ export default function createBacktestRoutes(): Router {
         });
       }
 
-      const status = {
+      const status: any = {
         jobId,
         status: job.status,
         startTime: job.startTime,
@@ -167,7 +192,7 @@ export default function createBacktestRoutes(): Router {
           }
         } catch (error) {
           job.status = 'failed';
-          job.error = error.message;
+          job.error = error instanceof Error ? error.message : String(error);
           job.completedAt = new Date();
         }
       }
@@ -198,7 +223,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error getting backtest status', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         jobId: req.params.jobId,
         service: 'BacktestAPI'
@@ -252,7 +277,7 @@ export default function createBacktestRoutes(): Router {
         execution: {
           startTime: job.startTime,
           completedAt: job.completedAt,
-          duration: job.completedAt.getTime() - job.startTime.getTime()
+          duration: job.completedAt ? job.completedAt.getTime() - job.startTime.getTime() : 0
         },
         results: job.result,
         ...(includeTransactions === 'true' && { transactions: job.result.transactions })
@@ -273,7 +298,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error getting backtest results', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         jobId: req.params.jobId,
         service: 'BacktestAPI'
@@ -334,7 +359,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error getting backtest jobs', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'BacktestAPI'
       });
@@ -384,7 +409,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error deleting backtest job', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         jobId: req.params.jobId,
         service: 'BacktestAPI'
@@ -469,7 +494,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error comparing backtests', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'BacktestAPI'
       });
@@ -498,24 +523,27 @@ export default function createBacktestRoutes(): Router {
         });
       }
 
-      const params: any = {
-        symbol,
-        interval: timeframe,
-        limit: Math.min(Number(limit), 1000)
-      };
+      const symbolParam = symbol as string;
+      const intervalParam = timeframe as string;
+      const limitParam = Math.min(Number(limit), 1000);
+      const startTime = startDate ? new Date(startDate as string).getTime() : Date.now() - 30 * 24 * 60 * 60 * 1000;
+      const endTime = endDate ? new Date(endDate as string).getTime() : Date.now();
 
-      if (startDate) params.startTime = new Date(startDate as string).getTime();
-      if (endDate) params.endTime = new Date(endDate as string).getTime();
+      const historicalData = await binanceService.getHistoricalKlines(
+        symbolParam, 
+        intervalParam, 
+        startTime, 
+        endTime, 
+        limitParam
+      );
 
-      const historicalData = await binanceService.getHistoricalData(params);
-
-      const formattedData = historicalData.map(candle => ({
-        timestamp: new Date(candle.timestamp),
-        open: candle.open,
-        high: candle.high,
-        low: candle.low,
-        close: candle.close,
-        volume: candle.volume
+      const formattedData = historicalData.map((candle: any) => ({
+        timestamp: new Date(candle[0]),
+        open: parseFloat(candle[1]),
+        high: parseFloat(candle[2]),
+        low: parseFloat(candle[3]),
+        close: parseFloat(candle[4]),
+        volume: parseFloat(candle[5])
       }));
 
       res.json({
@@ -541,7 +569,7 @@ export default function createBacktestRoutes(): Router {
 
     } catch (error) {
       logger.error('Error getting historical data', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         symbol: req.params.symbol,
         service: 'BacktestAPI'
@@ -556,29 +584,31 @@ export default function createBacktestRoutes(): Router {
   async function runBacktest(config: any): Promise<any> {
     try {
       // Get historical data
-      const historicalData = await binanceService.getHistoricalData({
-        symbol: config.symbol,
-        interval: config.timeframe,
-        startTime: config.startDate.getTime(),
-        endTime: config.endDate.getTime(),
-        limit: 1000
-      });
+      const historicalData = await binanceService.getHistoricalKlines(
+        config.symbol,
+        config.timeframe,
+        config.startDate.getTime(),
+        config.endDate.getTime(),
+        1000
+      );
+
+      // Create backtest engine with config
+      const backtestEngine = new BacktestEngine(config);
 
       // Create strategy instance
-      const strategy = strategyFactory.createStrategy(config.strategyId, config.parameters);
+      const strategy = await strategyFactory.create(config.strategyId, config.parameters);
       if (config.riskManagement) {
         strategy.riskManagement = { ...strategy.riskManagement, ...config.riskManagement };
       }
 
       // Run backtest
-      const results = await backtestEngine.runBacktest(
+      const results = await backtestEngine.run(
         strategy,
-        historicalData,
-        config.initialBalance
+        historicalData
       );
 
       // Analyze performance
-      const performance = performanceAnalyzer.analyzePerformance(results);
+      const performance = await performanceAnalyzer.analyze(results);
 
       return {
         summary: {
@@ -589,14 +619,14 @@ export default function createBacktestRoutes(): Router {
           profitFactor: performance.profitFactor
         },
         performance,
-        equity: results.equityCurve,
-        drawdown: results.drawdownCurve,
-        transactions: results.transactions
+        equity: results.equityCurve || [],
+        drawdown: results.drawdownCurve || [],
+        transactions: results.trades || []
       };
 
     } catch (error) {
       logger.error('Backtest execution failed', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         jobId: config.jobId,
         service: 'BacktestAPI'
       });

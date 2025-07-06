@@ -48,7 +48,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error getting trading status', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -84,7 +84,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error starting trading engine', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -120,7 +120,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error stopping trading engine', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -149,7 +149,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error activating emergency stop', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -191,7 +191,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error getting trading strategies', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -232,7 +232,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error adding trading strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -272,7 +272,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error removing trading strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -303,7 +303,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error getting active positions', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -367,7 +367,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error validating trade order', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -397,7 +397,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error generating risk report', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });
@@ -427,7 +427,7 @@ export default function createTradingRoutes(
 
     } catch (error) {
       logger.error('Error resetting circuit breaker', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'TradingAPI'
       });

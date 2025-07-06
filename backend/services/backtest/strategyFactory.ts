@@ -3,7 +3,7 @@ import {
   IndicatorConfig, 
   TradingRule, 
   RiskManagementConfig 
-} from '@/types';
+} from '../../../src/types';
 
 /**
  * Strategy Factory
@@ -16,6 +16,147 @@ import {
  * - Educational value for understanding different trading approaches
  */
 export class StrategyFactory {
+
+  /**
+   * Create a strategy by ID
+   */
+  public async create(strategyId: string, parameters?: any): Promise<TradingStrategy> {
+    switch (strategyId) {
+      case 'moving-average-crossover':
+        return StrategyFactory.createMovingAverageCrossoverStrategy();
+      case 'mean-reversion':
+        return StrategyFactory.createMeanReversionStrategy();
+      case 'momentum-breakout':
+        return StrategyFactory.createMomentumBreakoutStrategy();
+      case 'volume-price-analysis':
+        return StrategyFactory.createVolumePriceStrategy();
+      case 'multi-timeframe-confluence':
+        return StrategyFactory.createMultiTimeframeStrategy();
+      case 'scalping':
+        return StrategyFactory.createScalpingStrategy();
+      default:
+        throw new Error(`Unknown strategy ID: ${strategyId}`);
+    }
+  }
+
+  /**
+   * Get available strategies
+   */
+  public getAvailable(): Array<{id: string; name: string; description: string; category?: string; timeframes?: string[]; marketConditions?: string[]; defaultParameters?: any; riskLevel?: string; indicators?: any[]; logic?: string; entryConditions?: string[]; exitConditions?: string[]; riskConsiderations?: string[]; parameterRanges?: any}> {
+    return [
+      { 
+        id: 'moving-average-crossover', 
+        name: 'Moving Average Crossover', 
+        description: 'Trend following strategy using EMA crossovers',
+        category: 'Trend Following',
+        timeframes: ['1h', '4h', '1d'],
+        marketConditions: ['Trending'],
+        defaultParameters: {},
+        riskLevel: 'Medium',
+        indicators: ['EMA', 'MACD'],
+        logic: 'Buy when fast EMA crosses above slow EMA',
+        entryConditions: ['EMA crossover', 'MACD confirmation'],
+        exitConditions: ['Reverse crossover', 'Stop loss'],
+        riskConsiderations: ['False signals in ranging markets'],
+        parameterRanges: {}
+      },
+      { 
+        id: 'mean-reversion', 
+        name: 'Mean Reversion', 
+        description: 'RSI + Bollinger Bands for ranging markets',
+        category: 'Mean Reversion',
+        timeframes: ['15m', '1h'],
+        marketConditions: ['Ranging'],
+        defaultParameters: {},
+        riskLevel: 'Low',
+        indicators: ['RSI', 'Bollinger Bands'],
+        logic: 'Buy when oversold, sell when overbought',
+        entryConditions: ['RSI < 30', 'Price near lower BB'],
+        exitConditions: ['RSI > 70', 'Price near upper BB'],
+        riskConsiderations: ['Poor performance in trending markets'],
+        parameterRanges: {}
+      },
+      { 
+        id: 'momentum-breakout', 
+        name: 'Momentum Breakout', 
+        description: 'Keltner Channel breakouts with volume',
+        category: 'Breakout',
+        timeframes: ['1h', '4h'],
+        marketConditions: ['Volatile'],
+        defaultParameters: {},
+        riskLevel: 'High',
+        indicators: ['Keltner Channels', 'Volume'],
+        logic: 'Trade breakouts with volume confirmation',
+        entryConditions: ['Price breaks channel', 'High volume'],
+        exitConditions: ['Price returns to channel', 'Volume drops'],
+        riskConsiderations: ['False breakouts'],
+        parameterRanges: {}
+      },
+      { 
+        id: 'volume-price-analysis', 
+        name: 'Volume-Price Analysis', 
+        description: 'VWAP + volume indicators',
+        category: 'Volume',
+        timeframes: ['5m', '15m', '1h'],
+        marketConditions: ['Any'],
+        defaultParameters: {},
+        riskLevel: 'Medium',
+        indicators: ['VWAP', 'OBV', 'MFI'],
+        logic: 'Trade based on volume-price relationships',
+        entryConditions: ['Price above VWAP', 'Volume confirmation'],
+        exitConditions: ['Price below VWAP', 'Volume divergence'],
+        riskConsiderations: ['Low volume periods'],
+        parameterRanges: {}
+      },
+      { 
+        id: 'multi-timeframe-confluence', 
+        name: 'Multi-Timeframe Confluence', 
+        description: 'High-probability setups',
+        category: 'Multi-Timeframe',
+        timeframes: ['1h', '4h', '1d'],
+        marketConditions: ['Any'],
+        defaultParameters: {},
+        riskLevel: 'Medium',
+        indicators: ['Multiple'],
+        logic: 'Align signals across timeframes',
+        entryConditions: ['Multiple timeframe confirmation'],
+        exitConditions: ['Timeframe divergence'],
+        riskConsiderations: ['Complex analysis'],
+        parameterRanges: {}
+      },
+      { 
+        id: 'scalping', 
+        name: 'Scalping Strategy', 
+        description: 'High-frequency short-term trading',
+        category: 'Scalping',
+        timeframes: ['1m', '5m'],
+        marketConditions: ['High Volume'],
+        defaultParameters: {},
+        riskLevel: 'High',
+        indicators: ['Fast EMA', 'RSI'],
+        logic: 'Quick trades on small price movements',
+        entryConditions: ['Fast momentum', 'Tight spreads'],
+        exitConditions: ['Quick profit/loss targets'],
+        riskConsiderations: ['High transaction costs', 'Requires constant monitoring'],
+        parameterRanges: {}
+      }
+    ];
+  }
+
+  /**
+   * Get strategy info by ID
+   */
+  public getStrategyInfo(strategyId: string): any {
+    const strategies = this.getAvailable();
+    return strategies.find(s => s.id === strategyId);
+  }
+
+  /**
+   * Create strategy (alias for create)
+   */
+  public async createStrategy(strategyId: string, parameters?: any): Promise<TradingStrategy> {
+    return this.create(strategyId, parameters);
+  }
   
   /**
    * Trend Following Strategy using Moving Average Crossover
@@ -78,8 +219,9 @@ export class StrategyFactory {
       indicators,
       rules,
       riskManagement,
+      parameters: {},
       isActive: true,
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -146,8 +288,9 @@ export class StrategyFactory {
       indicators,
       rules,
       riskManagement,
+      parameters: {},
       isActive: true,
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -220,8 +363,9 @@ export class StrategyFactory {
       indicators,
       rules,
       riskManagement,
+      parameters: {},
       isActive: true,
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -294,8 +438,9 @@ export class StrategyFactory {
       indicators,
       rules,
       riskManagement,
+      parameters: {},
       isActive: true,
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -374,8 +519,9 @@ export class StrategyFactory {
       indicators,
       rules,
       riskManagement,
+      parameters: {},
       isActive: true,
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -448,8 +594,9 @@ export class StrategyFactory {
       indicators,
       rules,
       riskManagement,
+      parameters: {},
       isActive: true,
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -520,7 +667,7 @@ export class StrategyFactory {
   /**
    * Create custom strategy with user-defined parameters
    */
-  public static createCustomStrategy(
+  public createCustomStrategy(
     name: string,
     description: string,
     indicators: IndicatorConfig[],
@@ -535,7 +682,7 @@ export class StrategyFactory {
       rules,
       riskManagement,
       isActive: false, // Start inactive for testing
-      performance: this.createEmptyPerformance(),
+      performance: StrategyFactory.createEmptyPerformance(),
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -552,6 +699,7 @@ export class StrategyFactory {
       winRate: 0,
       totalReturn: 0,
       totalReturnPercentage: 0,
+      totalPnL: 0,
       maxDrawdown: 0,
       maxDrawdownPercentage: 0,
       sharpeRatio: 0,

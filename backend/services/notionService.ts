@@ -2,7 +2,7 @@ import { Client } from '@notionhq/client';
 import config from '../config/config';
 import logger from '../utils/logger';
 import { AIService } from './ai/aiService';
-import { Trade, TradingJournalEntry, NotionPage } from '@/types';
+import { Trade, TradingJournalEntry, NotionPage } from '../../src/types';
 
 /**
  * Notion API Service
@@ -129,11 +129,13 @@ export class NotionService {
               start: trade.entryTime.toISOString(),
             },
           },
-          'Exit Time': trade.exitTime ? {
-            date: {
-              start: trade.exitTime.toISOString(),
-            },
-          } : undefined,
+          ...(trade.exitTime ? {
+            'Exit Time': {
+              date: {
+                start: trade.exitTime.toISOString(),
+              },
+            }
+          } : {}),
           'AI Score': {
             number: aiAnalysis.score,
           },
@@ -393,7 +395,7 @@ export class NotionService {
         service: 'NotionService'
       });
 
-      return response as NotionPage;
+      return response as unknown as NotionPage;
 
     } catch (error) {
       logger.error('Failed to create journal entry', {
@@ -503,21 +505,27 @@ Format your response as JSON:
         page_id: pageId,
         properties: {
           'Exit Price': {
+            type: 'number',
             number: trade.exitPrice || 0,
           },
           'PnL': {
+            type: 'number',
             number: trade.pnl || 0,
           },
           'Status': {
+            type: 'select',
             select: {
               name: trade.status,
             },
           },
-          'Exit Time': trade.exitTime ? {
-            date: {
-              start: trade.exitTime.toISOString(),
-            },
-          } : undefined,
+          ...(trade.exitTime ? {
+            'Exit Time': {
+              type: 'date',
+              date: {
+                start: trade.exitTime.toISOString(),
+              },
+            }
+          } : {}),
         },
       });
 
@@ -785,7 +793,7 @@ Format your response as JSON:
         service: 'NotionService'
       });
 
-      return response as NotionPage;
+      return response as unknown as NotionPage;
 
     } catch (error) {
       logger.error('Failed to create daily summary', {

@@ -36,11 +36,11 @@ class TradingServer {
   private app: express.Application;
   private httpServer: any;
   private io: SocketIOServer;
-  private tradingEngine: TradingEngine;
-  private riskManager: RiskManager;
-  private performanceMonitor: PerformanceMonitor;
-  private alertSystem: AlertSystem;
-  private binanceService: BinanceService;
+  private tradingEngine!: TradingEngine;
+  private riskManager!: RiskManager;
+  private performanceMonitor!: PerformanceMonitor;
+  private alertSystem!: AlertSystem;
+  private binanceService!: BinanceService;
 
   constructor() {
     this.app = express();
@@ -71,17 +71,7 @@ class TradingServer {
       this.performanceMonitor = new PerformanceMonitor();
       this.alertSystem = new AlertSystem();
       
-      // Initialize with default portfolio for risk manager
-      const defaultPortfolio = {
-        totalValue: 10000,
-        totalPnL: 0,
-        totalPnLPercentage: 0,
-        availableBalance: 10000,
-        positions: [],
-        assets: []
-      };
-      
-      this.riskManager = new RiskManager(defaultPortfolio);
+      this.riskManager = new RiskManager();
       this.tradingEngine = new TradingEngine();
 
       this.setupServiceEventHandlers();
@@ -91,7 +81,7 @@ class TradingServer {
       });
     } catch (error) {
       logger.error('Failed to initialize trading services', { 
-        error, 
+        error: error instanceof Error ? error.message : String(error), 
         service: 'TradingServer' 
       });
       throw error;
@@ -243,7 +233,7 @@ class TradingServer {
     this.app.use('/api/trading', tradingRoutes(this.tradingEngine, this.riskManager));
     this.app.use('/api/portfolio', portfolioRoutes(this.binanceService, this.performanceMonitor));
     this.app.use('/api/strategy', strategyRoutes(this.tradingEngine));
-    this.app.use('/api/backtest', backtestRoutes());
+    this.app.use('/api/backtest', backtestRoutes(this.binanceService));
     this.app.use('/api/analytics', analyticsRoutes(this.performanceMonitor, this.riskManager));
     this.app.use('/api/settings', settingsRoutes(this.alertSystem));
     this.app.use('/api/notion', notionRoutes());
@@ -285,7 +275,7 @@ class TradingServer {
           this.alertSystem.start();
           socket.emit('tradingStarted', { success: true });
         } catch (error) {
-          socket.emit('tradingError', { error: error.message });
+          socket.emit('tradingError', { error: error instanceof Error ? error.message : String(error) });
         }
       });
 
@@ -296,7 +286,7 @@ class TradingServer {
           this.alertSystem.stop();
           socket.emit('tradingStopped', { success: true });
         } catch (error) {
-          socket.emit('tradingError', { error: error.message });
+          socket.emit('tradingError', { error: error instanceof Error ? error.message : String(error) });
         }
       });
 
@@ -305,7 +295,7 @@ class TradingServer {
           await this.tradingEngine.emergencyStopAll();
           socket.emit('emergencyStopActivated', { success: true });
         } catch (error) {
-          socket.emit('tradingError', { error: error.message });
+          socket.emit('tradingError', { error: error instanceof Error ? error.message : String(error) });
         }
       });
 
@@ -315,7 +305,7 @@ class TradingServer {
           this.binanceService.subscribeToKline(symbol, '1m');
           socket.emit('subscriptionSuccess', { symbol });
         } catch (error) {
-          socket.emit('subscriptionError', { symbol, error: error.message });
+          socket.emit('subscriptionError', { symbol, error: error instanceof Error ? error.message : String(error) });
         }
       });
 
@@ -344,8 +334,8 @@ class TradingServer {
     // Global error handler
     this.app.use((error: any, req: any, res: any, next: any) => {
       logger.error('Unhandled error in request', {
-        error: error.message,
-        stack: error.stack,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
         requestId: req.requestId,
         method: req.method,
         url: req.url,
@@ -357,7 +347,7 @@ class TradingServer {
       
       res.status(error.status || 500).json({
         error: error.name || 'Internal Server Error',
-        message: isDevelopment ? error.message : 'An internal server error occurred',
+        message: isDevelopment ? (error instanceof Error ? error.message : String(error)) : 'An internal server error occurred',
         requestId: req.requestId,
         timestamp: new Date().toISOString(),
         ...(isDevelopment && { stack: error.stack })
@@ -366,7 +356,7 @@ class TradingServer {
 
     // Handle uncaught exceptions
     process.on('uncaughtException', (error) => {
-      logger.error('Uncaught Exception', { error: error.message, stack: error.stack });
+      logger.error('Uncaught Exception', { error: error instanceof Error ? error.message : String(error), stack: error instanceof Error ? error.stack : undefined });
       // Graceful shutdown
       this.shutdown();
     });
@@ -407,7 +397,7 @@ class TradingServer {
 
     } catch (error) {
       logger.error('Failed to start trading server', { 
-        error, 
+        error: error instanceof Error ? error.message : String(error), 
         service: 'TradingServer' 
       });
       throw error;
@@ -441,7 +431,7 @@ class TradingServer {
       });
 
     } catch (error) {
-      logger.error('Error during shutdown', { error, service: 'TradingServer' });
+      logger.error('Error during shutdown', { error: error instanceof Error ? error.message : String(error), service: 'TradingServer' });
       process.exit(1);
     }
   }
@@ -465,7 +455,7 @@ if (require.main === module) {
   
   // Start server
   server.start().catch((error) => {
-    logger.error('Failed to start server', { error });
+    logger.error('Failed to start server', { error: error instanceof Error ? error.message : String(error) });
     process.exit(1);
   });
 }

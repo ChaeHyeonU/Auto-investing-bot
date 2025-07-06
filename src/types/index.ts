@@ -25,6 +25,8 @@ export interface Order {
   executedQty: number;
   cummulativeQuoteQty: number;
   avgPrice?: number;
+  pnl?: number;
+  timestamp?: Date;
 }
 
 export interface Portfolio {
@@ -34,14 +36,21 @@ export interface Portfolio {
   availableBalance: number;
   positions: Position[];
   assets: Asset[];
+  dailyPnL?: number;
+  totalTrades?: number;
+  winRate?: number;
+  maxDrawdown?: number;
+  sharpeRatio?: number;
 }
 
 export interface Position {
   symbol: string;
   quantity: number;
   averagePrice: number;
+  avgPrice: number;
   currentPrice: number;
   pnl: number;
+  unrealizedPnL: number;
   pnlPercentage: number;
   value: number;
   side: 'LONG' | 'SHORT';
@@ -144,6 +153,7 @@ export interface TradingStrategy {
   indicators: IndicatorConfig[];
   rules: TradingRule[];
   riskManagement: RiskManagementConfig;
+  parameters?: Record<string, any>;
   isActive: boolean;
   performance: StrategyPerformance;
   createdAt: Date;
@@ -180,6 +190,7 @@ export interface StrategyPerformance {
   winRate: number;
   totalReturn: number;
   totalReturnPercentage: number;
+  totalPnL: number;
   maxDrawdown: number;
   maxDrawdownPercentage: number;
   sharpeRatio: number;
@@ -215,6 +226,8 @@ export interface BacktestResult {
   sharpeRatio: number;
   trades: BacktestTrade[];
   equity: EquityPoint[];
+  equityCurve?: EquityPoint[];
+  drawdownCurve?: EquityPoint[];
   createdAt: Date;
 }
 
@@ -306,6 +319,7 @@ export interface AppConfig {
   notion: NotionConfig;
   trading: TradingConfig;
   server: ServerConfig;
+  alerts?: AlertConfig;
 }
 
 export interface BinanceConfig {
@@ -342,6 +356,34 @@ export interface ServerConfig {
   cors: {
     origin: string[];
     credentials: boolean;
+  };
+}
+
+export interface AlertConfig {
+  email?: {
+    enabled: boolean;
+    smtp?: {
+      host: string;
+      port: number;
+      secure: boolean;
+      auth: {
+        user: string;
+        pass: string;
+      };
+    };
+    recipients: string[];
+  };
+  slack?: {
+    enabled: boolean;
+    webhookUrl: string;
+  };
+  discord?: {
+    enabled: boolean;
+    webhookUrl: string;
+  };
+  webhook?: {
+    enabled: boolean;
+    url: string;
   };
 }
 
@@ -435,3 +477,48 @@ export type OrderStatus = 'NEW' | 'PARTIALLY_FILLED' | 'FILLED' | 'CANCELED' | '
 export type TradingMode = 'PAPER' | 'LIVE';
 
 export type LogLevel = 'error' | 'warn' | 'info' | 'debug';
+
+// Performance Monitor Types
+export interface DailyMetrics {
+  date: Date;
+  totalTrades: number;
+  winningTrades: number;
+  losingTrades: number;
+  winRate: number;
+  averageWin: number;
+  averageLoss: number;
+  realizedPnL: number;
+  unrealizedPnL: number;
+  totalVolume: number;
+  largestWin: number;
+  largestLoss: number;
+  largestUnrealizedGain: number;
+  largestUnrealizedLoss: number;
+  totalPositionValue: number;
+}
+
+export interface AlertThresholds {
+  maxDrawdown: number;
+  minWinRate: number;
+  dailyLossLimit: number;
+  minProfitFactor?: number;
+  maxDailyLoss?: number;
+  minSharpeRatio?: number;
+}
+
+// Risk Manager Types
+export interface DailyRiskStats {
+  date: Date;
+  tradesCount: number;
+  totalVolume: number;
+  realizedPnL: number;
+  unrealizedPnL: number;
+  maxDrawdown: number;
+}
+
+export interface RiskLimits {
+  maxPositionSize: number;
+  maxDailyLoss: number;
+  maxOpenPositions: number;
+  maxDrawdown: number;
+}

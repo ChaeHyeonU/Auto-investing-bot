@@ -26,7 +26,7 @@ export default function createStrategyRoutes(
    */
   router.get('/', async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const availableStrategies = strategyFactory.getAvailableStrategies();
+      const availableStrategies = strategyFactory.getAvailable();
       
       const strategies = availableStrategies.map(strategyInfo => ({
         id: strategyInfo.id,
@@ -55,7 +55,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error getting available strategies', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'StrategyAPI'
       });
@@ -119,7 +119,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error getting active strategies', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'StrategyAPI'
       });
@@ -151,7 +151,7 @@ export default function createStrategyRoutes(
         });
       }
 
-      const strategy = strategyFactory.createStrategy(strategyId, strategyInfo.defaultParameters);
+      const strategy = await strategyFactory.createStrategy(strategyId, strategyInfo.defaultParameters);
 
       const detailedStrategy = {
         id: strategyInfo.id,
@@ -192,7 +192,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error getting strategy details', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         strategyId: req.params.strategyId,
         service: 'StrategyAPI'
@@ -238,7 +238,7 @@ export default function createStrategyRoutes(
       };
 
       // Create strategy instance
-      const strategy = strategyFactory.createStrategy(templateId, finalParameters);
+      const strategy = await strategyFactory.createStrategy(templateId, finalParameters);
       
       // Customize strategy
       strategy.id = `${templateId}-${Date.now()}`;
@@ -280,7 +280,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error creating strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'StrategyAPI'
       });
@@ -332,7 +332,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error updating strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         strategyId: req.params.strategyId,
         service: 'StrategyAPI'
@@ -381,7 +381,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error deleting strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         strategyId: req.params.strategyId,
         service: 'StrategyAPI'
@@ -422,7 +422,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error activating strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         strategyId: req.params.strategyId,
         service: 'StrategyAPI'
@@ -463,7 +463,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error deactivating strategy', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         strategyId: req.params.strategyId,
         service: 'StrategyAPI'
@@ -528,7 +528,7 @@ export default function createStrategyRoutes(
 
     } catch (error) {
       logger.error('Error getting strategy performance', {
-        error: error.message,
+        error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         strategyId: req.params.strategyId,
         service: 'StrategyAPI'

@@ -7,7 +7,7 @@ import {
   TradingStrategy,
   Order,
   Position
-} from '@/types';
+} from '../../../src/types';
 import { IndicatorManager } from '../indicators/indicatorManager';
 import logger from '../../utils/logger';
 
@@ -58,6 +58,16 @@ export class BacktestEngine {
       initialBalance: config.initialBalance,
       service: 'BacktestEngine'
     });
+  }
+
+  /**
+   * Run the complete backtest (alias for runBacktest)
+   */
+  public async run(
+    strategy: TradingStrategy,
+    historicalData: CandlestickData[]
+  ): Promise<BacktestResult> {
+    return this.runBacktest(historicalData, strategy);
   }
 
   /**
@@ -267,8 +277,10 @@ export class BacktestEngine {
       symbol: this.config.symbol,
       quantity: positionSize,
       averagePrice: effectivePrice,
+      avgPrice: effectivePrice,
       currentPrice: effectivePrice,
       pnl: 0,
+      unrealizedPnL: 0,
       pnlPercentage: 0,
       value: positionSize * effectivePrice,
       side
