@@ -26,15 +26,16 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
   loading = false,
   className = '',
 }) => {
-  // Calculate portfolio metrics
+  // Calculate portfolio metrics with safe values
+  const portfolioValue = portfolio?.totalValue || 0;
   const portfolioPnL = portfolio?.totalPnL || 0;
-  const portfolioPnLPercent = portfolio?.totalValue 
-    ? ((portfolioPnL / (portfolio.totalValue - portfolioPnL)) * 100)
+  const portfolioPnLPercent = portfolioValue > 0 && portfolioPnL !== 0
+    ? ((portfolioPnL / (portfolioValue - portfolioPnL)) * 100)
     : 0;
 
   const todaysPnL = portfolio?.dailyPnL || 0;
-  const todaysPnLPercent = portfolio?.totalValue 
-    ? ((todaysPnL / portfolio.totalValue) * 100)
+  const todaysPnLPercent = portfolioValue > 0 && todaysPnL !== 0
+    ? ((todaysPnL / portfolioValue) * 100)
     : 0;
 
   return (
@@ -44,7 +45,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
         <div className="grid grid-cols-1 gap-4 mb-6">
           <MetricCard
             label="Total Portfolio Value"
-            value={`$${portfolio?.totalValue.toLocaleString() || '0'}`}
+            value={`$${portfolioValue.toLocaleString()}`}
             change={portfolioPnLPercent}
             trend={portfolioPnL >= 0 ? 'up' : 'down'}
             icon="💰"
@@ -70,7 +71,7 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
           
           <MetricCard
             label="Available Balance"
-            value={`$${portfolio?.availableBalance.toLocaleString() || '0'}`}
+            value={`$${(portfolio?.availableBalance || 0).toLocaleString()}`}
             icon="💳"
           />
         </div>
@@ -83,24 +84,26 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
               <div>
                 <h4 className="text-sm font-medium text-gray-400 mb-3">Asset Allocation</h4>
                 <div className="space-y-2">
-                  {portfolio.positions?.map((position) => (
-                    <div key={position.symbol} className="flex items-center justify-between p-2 bg-slate-700 rounded">
-                      <div className="flex items-center space-x-3">
-                        <div className="text-sm font-medium text-white">{position.symbol}</div>
-                        <div className="text-xs text-gray-400">
-                          {position.quantity.toFixed(6)} units
+                  {(portfolio?.positions && Array.isArray(portfolio.positions) && portfolio.positions.length > 0) ? (
+                    portfolio.positions.map((position, index) => (
+                      <div key={position?.symbol || `position-${index}`} className="flex items-center justify-between p-2 bg-slate-700 rounded">
+                        <div className="flex items-center space-x-3">
+                          <div className="text-sm font-medium text-white">{position?.symbol || 'Unknown'}</div>
+                          <div className="text-xs text-gray-400">
+                            {(position?.quantity || 0).toFixed(6)} units
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-white">
+                            ${((position?.quantity || 0) * (position?.avgPrice || 0)).toLocaleString()}
+                          </div>
+                          <div className={`text-xs ${(position?.unrealizedPnL || 0) >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            {(position?.unrealizedPnL || 0) >= 0 ? '+' : ''}${(position?.unrealizedPnL || 0).toFixed(2)}
+                          </div>
                         </div>
                       </div>
-                      <div className="text-right">
-                        <div className="text-sm font-medium text-white">
-                          ${(position.quantity * position.avgPrice).toLocaleString()}
-                        </div>
-                        <div className={`text-xs ${position.unrealizedPnL >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                          {position.unrealizedPnL >= 0 ? '+' : ''}${position.unrealizedPnL.toFixed(2)}
-                        </div>
-                      </div>
-                    </div>
-                  )) || (
+                    ))
+                  ) : (
                     <div className="text-gray-400 text-center py-4">
                       No positions
                     </div>
@@ -145,9 +148,9 @@ export const PortfolioOverview: React.FC<PortfolioOverviewProps> = ({
         {/* Recent Trades */}
         <Card title="Recent Trades" subtitle={`Last ${recentTrades?.length || 0} trades`}>
           <div className="space-y-2 max-h-80 overflow-y-auto">
-            {recentTrades && recentTrades.length > 0 ? (
-              recentTrades.map((trade) => (
-                <div key={trade.id} className="p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors">
+            {(recentTrades && Array.isArray(recentTrades) && recentTrades.length > 0) ? (
+              recentTrades.map((trade, index) => (
+                <div key={trade?.id || `trade-${index}`} className="p-3 bg-slate-700 rounded-lg hover:bg-slate-600 transition-colors">
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-medium text-white">{trade.symbol}</span>
                     <span className={`text-sm font-medium px-2 py-1 rounded ${

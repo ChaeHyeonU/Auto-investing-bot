@@ -1,7 +1,9 @@
 import dotenv from 'dotenv';
 import { AppConfig } from '@/types';
+import path from 'path';
 
-dotenv.config();
+// .env.local 파일을 명시적으로 로드
+dotenv.config({ path: path.join(process.cwd(), '.env.local') });
 
 const config: AppConfig = {
   binance: {

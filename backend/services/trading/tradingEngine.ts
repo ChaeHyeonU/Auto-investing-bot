@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import { BinanceService } from '../binanceService';
+import { BinanceApiDirect } from '../binanceApiDirect';
 import { IndicatorManager } from '../indicators/indicatorManager';
 import { OpenAIService } from '../ai/openaiService';
 import { 
@@ -27,7 +27,7 @@ import logger from '../../utils/logger';
  * - Detailed logging and audit trail for compliance
  */
 export class TradingEngine extends EventEmitter {
-  private binanceService: BinanceService;
+  private binanceService: BinanceApiDirect;
   private indicatorManagers: Map<string, IndicatorManager> = new Map();
   private aiService: OpenAIService;
   private activeStrategies: Map<string, TradingStrategy> = new Map();
@@ -56,7 +56,7 @@ export class TradingEngine extends EventEmitter {
   constructor() {
     super();
     
-    this.binanceService = new BinanceService();
+    this.binanceService = new BinanceApiDirect();
     this.aiService = new OpenAIService();
     
     // Initialize risk parameters from config
@@ -183,8 +183,32 @@ export class TradingEngine extends EventEmitter {
         this.indicatorManagers.set(symbol, indicatorManager);
         
         // Subscribe to price updates
-        this.binanceService.subscribeToTicker(symbol);
-        this.binanceService.subscribeToKline(symbol, config.trading.defaultTimeframe);
+        this.binanceService.subscribeToTicker(symbol, (tickerData) => {
+          this.handlePriceUpdate({
+            symbol,
+            price: parseFloat(tickerData.lastPrice || tickerData.c),
+            change: parseFloat(tickerData.priceChangePercent || tickerData.P),
+            volume: parseFloat(tickerData.volume || tickerData.v),
+            timestamp: Date.now()
+          });
+        });
+        
+        this.binanceService.subscribeToKlines(symbol, config.trading.defaultTimeframe, (klineData) => {
+          const candlestick: CandlestickData = {
+            openTime: klineData.t,
+            open: parseFloat(klineData.o),
+            high: parseFloat(klineData.h),
+            low: parseFloat(klineData.l),
+            close: parseFloat(klineData.c),
+            volume: parseFloat(klineData.v),
+            closeTime: klineData.T,
+            quoteAssetVolume: parseFloat(klineData.q),
+            numberOfTrades: klineData.n,
+            takerBuyBaseAssetVolume: parseFloat(klineData.V),
+            takerBuyQuoteAssetVolume: parseFloat(klineData.Q)
+          };
+          this.processMarketData(symbol, candlestick);
+        });
       }
     });
 

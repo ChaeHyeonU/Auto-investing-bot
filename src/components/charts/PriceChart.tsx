@@ -77,8 +77,11 @@ export const PriceChart: React.FC<PriceChartProps> = ({
   // Chart container ref
   const chartRef = useRef<HTMLDivElement>(null);
 
-  // WebSocket for real-time price updates
-  const { data: priceData, connected } = useWebSocket(`ws://localhost:3001/price/${symbol}/${selectedTimeframe}`);
+  // WebSocket for real-time price updates (using API URL not direct WebSocket)
+  const { data: priceData, connected } = useWebSocket(
+    process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
+    { enabled: true }
+  );
 
   // Timeframe options
   const timeframes = [

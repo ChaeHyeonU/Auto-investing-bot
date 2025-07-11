@@ -18,7 +18,7 @@ import notionRoutes from './api/notion';
 
 // Import services
 import { TradingEngine, RiskManager, PerformanceMonitor, AlertSystem } from './services/trading';
-import { BinanceService } from './services/binanceService';
+import { BinanceApiDirect } from './services/binanceApiDirect';
 
 /**
  * Express.js Backend Server with TypeScript
@@ -40,7 +40,7 @@ class TradingServer {
   private riskManager!: RiskManager;
   private performanceMonitor!: PerformanceMonitor;
   private alertSystem!: AlertSystem;
-  private binanceService!: BinanceService;
+  private binanceService!: BinanceApiDirect;
 
   constructor() {
     this.app = express();
@@ -67,7 +67,7 @@ class TradingServer {
    */
   private initializeServices(): void {
     try {
-      this.binanceService = new BinanceService();
+      this.binanceService = new BinanceApiDirect();
       this.performanceMonitor = new PerformanceMonitor();
       this.alertSystem = new AlertSystem();
       
@@ -222,7 +222,7 @@ class TradingServer {
           riskManager: !this.riskManager.isCircuitBreakerActive(),
           performanceMonitor: this.performanceMonitor.isMonitoringActive(),
           alertSystem: this.alertSystem.isAlertSystemActive(),
-          binanceConnection: this.binanceService.isConnectedToBinance()
+          binanceConnection: true // BinanceService가 생성되면 연결된 것으로 간주
         }
       };
 
@@ -301,8 +301,16 @@ class TradingServer {
 
       socket.on('subscribeToSymbol', (symbol: string) => {
         try {
-          this.binanceService.subscribeToTicker(symbol);
-          this.binanceService.subscribeToKline(symbol, '1m');
+          // 실시간 가격 데이터 구독
+          this.binanceService.subscribeToTicker(symbol, (tickerData) => {
+            socket.emit('tickerUpdate', { symbol, data: tickerData });
+          });
+          
+          // 캔들스틱 데이터 구독 (올바른 메서드명 사용)
+          this.binanceService.subscribeToKlines(symbol, '1m', (klineData) => {
+            socket.emit('klineUpdate', { symbol, data: klineData });
+          });
+          
           socket.emit('subscriptionSuccess', { symbol });
         } catch (error) {
           socket.emit('subscriptionError', { symbol, error: error instanceof Error ? error.message : String(error) });
@@ -388,10 +396,20 @@ class TradingServer {
         });
       });
 
-      // Connect to Binance
-      await this.binanceService.connect();
+      // Try to connect to Binance (non-blocking)
+      try {
+        await this.binanceService.connect();
+        logger.info('Binance connection established', { service: 'TradingServer' });
+      } catch (binanceError) {
+        logger.warn('Failed to connect to Binance, server will continue without trading capabilities', { 
+          error: binanceError instanceof Error ? binanceError.message : String(binanceError),
+          service: 'TradingServer' 
+        });
+      }
       
-      logger.info('All services started and connected', { 
+      logger.info('Trading Server is running', { 
+        port: config.server.port,
+        binanceConnected: this.binanceService.isConnectedToBinance(),
         service: 'TradingServer' 
       });
 

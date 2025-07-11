@@ -1,22 +1,20 @@
 'use client';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { io, Socket } from 'socket.io-client';
 
 /**
- * WebSocket Hook for Real-time Trading Data
+ * Socket.IO Hook for Real-time Trading Data
  * 
- * This hook manages WebSocket connections for real-time updates
+ * This hook manages Socket.IO connections for real-time updates
  * from the trading system backend.
- * 
- * Usage:
- * const { data, connected, sendMessage } = useWebSocket('ws://localhost:3001');
  */
 
-interface WebSocketHookReturn<T = any> {
+interface SocketIOHookReturn<T = any> {
   data: T | null;
   connected: boolean;
   error: string | null;
-  sendMessage: (message: any) => void;
+  sendMessage: (event: string, data?: any) => void;
   reconnect: () => void;
 }
 
@@ -26,108 +24,143 @@ export function useWebSocket<T = any>(
     autoReconnect?: boolean;
     reconnectInterval?: number;
     maxReconnectAttempts?: number;
+    enabled?: boolean;
   } = {}
-): WebSocketHookReturn<T> {
+): SocketIOHookReturn<T> {
   const {
     autoReconnect = true,
     reconnectInterval = 5000,
-    maxReconnectAttempts = 5
+    maxReconnectAttempts = 5,
+    enabled = true
   } = options;
 
   const [data, setData] = useState<T | null>(null);
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
-  const wsRef = useRef<WebSocket | null>(null);
+  const socketRef = useRef<Socket | null>(null);
   const reconnectAttemptsRef = useRef(0);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const connect = useCallback(() => {
+    if (!enabled) {
+      console.log('Socket.IO disabled by configuration');
+      return;
+    }
+
     try {
       // Close existing connection
-      if (wsRef.current) {
-        wsRef.current.close();
+      if (socketRef.current) {
+        socketRef.current.disconnect();
       }
 
-      wsRef.current = new WebSocket(url);
+      console.log('🔄 Attempting Socket.IO connection to:', url);
+      
+      socketRef.current = io(url, {
+        transports: ['websocket', 'polling'],
+        autoConnect: true,
+        timeout: 20000,
+        reconnection: autoReconnect,
+        reconnectionAttempts: maxReconnectAttempts,
+        reconnectionDelay: reconnectInterval,
+        forceNew: true // Force new connection
+      });
 
-      wsRef.current.onopen = () => {
-        console.log('WebSocket connected');
+      socketRef.current.on('connect', () => {
+        console.log('✅ Socket.IO connected successfully');
         setConnected(true);
         setError(null);
         reconnectAttemptsRef.current = 0;
-      };
+      });
 
-      wsRef.current.onmessage = (event) => {
-        try {
-          const parsedData = JSON.parse(event.data);
-          setData(parsedData);
-        } catch (parseError) {
-          console.error('Failed to parse WebSocket message:', parseError);
-          setError('Failed to parse message');
-        }
-      };
-
-      wsRef.current.onclose = (event) => {
-        console.log('WebSocket disconnected:', event.code, event.reason);
+      socketRef.current.on('disconnect', (reason) => {
+        console.log('🔌 Socket.IO disconnected:', reason);
         setConnected(false);
-
-        // Auto-reconnect if enabled and not manually closed
-        if (autoReconnect && event.code !== 1000 && reconnectAttemptsRef.current < maxReconnectAttempts) {
-          reconnectAttemptsRef.current += 1;
-          console.log(`Reconnecting... Attempt ${reconnectAttemptsRef.current}/${maxReconnectAttempts}`);
-          
-          reconnectTimeoutRef.current = setTimeout(() => {
-            connect();
-          }, reconnectInterval);
+        
+        // Only show error for unexpected disconnections
+        if (reason !== 'io client disconnect') {
+          setError(`Disconnected: ${reason}`);
         }
-      };
+      });
 
-      wsRef.current.onerror = (event) => {
-        console.error('WebSocket error:', event);
-        setError('WebSocket connection error');
-      };
+      socketRef.current.on('connect_error', (err) => {
+        const errorMessage = err?.message || 'Connection failed';
+        console.warn('⚠️ Socket.IO connection error:', errorMessage);
+        setError(`Connection error: ${errorMessage}`);
+        setConnected(false);
+      });
+
+      // Listen for trading events
+      socketRef.current.on('priceUpdate', (updateData) => {
+        setData({ type: 'priceUpdate', ...updateData } as T);
+      });
+
+      socketRef.current.on('tradeExecuted', (tradeData) => {
+        setData({ type: 'tradeExecuted', trade: tradeData } as T);
+      });
+
+      socketRef.current.on('portfolioUpdate', (portfolioData) => {
+        setData({ type: 'portfolioUpdate', portfolio: portfolioData } as T);
+      });
+
+      socketRef.current.on('initialData', (initialData) => {
+        setData({ type: 'initialData', ...initialData } as T);
+      });
+
+      // Listen for errors
+      socketRef.current.on('error', (err) => {
+        console.error('❌ Socket.IO error:', err);
+        setError(`Socket error: ${err}`);
+      });
 
     } catch (connectionError) {
-      console.error('Failed to create WebSocket connection:', connectionError);
-      setError('Failed to connect');
+      console.error('❌ Failed to create Socket.IO connection:', connectionError);
+      setError('Failed to initialize connection');
     }
-  }, [url, autoReconnect, reconnectInterval, maxReconnectAttempts]);
+  }, [url, autoReconnect, reconnectInterval, maxReconnectAttempts, enabled]);
 
-  const sendMessage = useCallback((message: any) => {
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+  const sendMessage = useCallback((event: string, data?: any) => {
+    if (socketRef.current && socketRef.current.connected) {
       try {
-        wsRef.current.send(JSON.stringify(message));
+        socketRef.current.emit(event, data);
+        console.log(`📤 Sent message: ${event}`, data);
       } catch (sendError) {
-        console.error('Failed to send WebSocket message:', sendError);
+        console.error('Failed to send Socket.IO message:', sendError);
         setError('Failed to send message');
       }
     } else {
-      console.warn('WebSocket is not connected');
-      setError('WebSocket not connected');
+      console.warn('Cannot send message - Socket.IO not connected');
     }
   }, []);
 
   const reconnect = useCallback(() => {
+    console.log('🔄 Manual reconnection triggered');
     reconnectAttemptsRef.current = 0;
+    setError(null);
     connect();
   }, [connect]);
 
   useEffect(() => {
-    connect();
+    if (enabled) {
+      connect();
+    } else {
+      console.log('Socket.IO connection disabled');
+      setConnected(false);
+      setError(null);
+    }
 
     return () => {
-      // Clear reconnect timeout
+      // Cleanup
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
       
-      // Close WebSocket connection
-      if (wsRef.current) {
-        wsRef.current.close(1000, 'Component unmounting');
+      if (socketRef.current) {
+        console.log('🔌 Disconnecting Socket.IO');
+        socketRef.current.disconnect();
       }
     };
-  }, [connect]);
+  }, [connect, enabled]);
 
   return {
     data,
@@ -139,13 +172,17 @@ export function useWebSocket<T = any>(
 }
 
 /**
- * Specific hook for trading data updates
+ * Hook specifically for trading data updates
  */
 export function useTradingWebSocket() {
-  return useWebSocket('ws://localhost:3001', {
+  const socketUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+  const enableWebSocket = process.env.NEXT_PUBLIC_ENABLE_WEBSOCKET !== 'false';
+  
+  return useWebSocket(socketUrl, {
     autoReconnect: true,
     reconnectInterval: 3000,
-    maxReconnectAttempts: 10
+    maxReconnectAttempts: 5,
+    enabled: enableWebSocket
   });
 }
 

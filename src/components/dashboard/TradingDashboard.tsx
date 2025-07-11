@@ -26,10 +26,10 @@ export const TradingDashboard: React.FC<TradingDashboardProps> = ({
   className = '' 
 }) => {
   // API Hooks for data fetching
-  const { data: portfolio, loading: portfolioLoading, error: portfolioError } = usePortfolio();
-  const { data: tradingStatus, loading: statusLoading } = useTradingStatus();
-  const { data: strategies, loading: strategiesLoading } = useActiveStrategies();
-  const { data: recentTrades, loading: tradesLoading } = usePortfolioHistory(10);
+  const { data: portfolio, loading: portfolioLoading, error: portfolioError, refetch: refetchPortfolio } = usePortfolio();
+  const { data: tradingStatus, loading: statusLoading, refetch: refetchStatus } = useTradingStatus();
+  const { data: strategies, loading: strategiesLoading, refetch: refetchStrategies } = useActiveStrategies();
+  const { data: recentTrades, loading: tradesLoading, refetch: refetchTrades } = usePortfolioHistory(10);
   
   // Type-safe data with fallbacks
   const safePortfolio = portfolio as Portfolio | null;
@@ -38,7 +38,16 @@ export const TradingDashboard: React.FC<TradingDashboardProps> = ({
   const safeRecentTrades = recentTrades as Order[] | null;
 
   // WebSocket for real-time updates
-  const { data: wsData, connected: isConnected } = useTradingWebSocket();
+  const { data: wsData, connected: isConnected, error: wsError, reconnect: wsReconnect } = useTradingWebSocket();
+  
+  // Log WebSocket connection status
+  useEffect(() => {
+    if (isConnected) {
+      console.log('✅ Real-time WebSocket connected');
+    } else if (wsError) {
+      console.log('⚠️ WebSocket error:', wsError);
+    }
+  }, [isConnected, wsError]);
 
   // Local state for real-time updates
   const [livePortfolio, setLivePortfolio] = useState<Portfolio | null>(null);
@@ -84,8 +93,9 @@ export const TradingDashboard: React.FC<TradingDashboardProps> = ({
   const currentPortfolio = livePortfolio || safePortfolio;
   const currentTrades = liveTrades.length > 0 ? liveTrades : (safeRecentTrades || []);
   const portfolioPnL = currentPortfolio?.totalPnL || 0;
-  const portfolioPnLPercent = currentPortfolio?.totalValue 
-    ? ((portfolioPnL / (currentPortfolio.totalValue - portfolioPnL)) * 100)
+  const portfolioValue = currentPortfolio?.totalValue || 0;
+  const portfolioPnLPercent = portfolioValue > 0 && portfolioPnL !== 0
+    ? ((portfolioPnL / (portfolioValue - portfolioPnL)) * 100)
     : 0;
 
   // Loading state
@@ -136,6 +146,27 @@ export const TradingDashboard: React.FC<TradingDashboardProps> = ({
       headerActions={
         <div className="flex items-center space-x-4">
           <button
+            onClick={() => {
+              refetchPortfolio();
+              refetchStatus();
+              refetchStrategies();
+              refetchTrades();
+            }}
+            className="px-3 py-2 rounded-lg text-sm font-medium bg-slate-700 text-gray-300 hover:bg-slate-600 transition-colors"
+            title="Refresh Data"
+          >
+            🔄
+          </button>
+          {wsError && (
+            <button
+              onClick={wsReconnect}
+              className="px-3 py-2 rounded-lg text-sm font-medium bg-orange-600 text-white hover:bg-orange-700 transition-colors"
+              title="Reconnect WebSocket"
+            >
+              🔌
+            </button>
+          )}
+          <button
             onClick={() => setShowMarketOverview(!showMarketOverview)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
               showMarketOverview 
@@ -147,7 +178,7 @@ export const TradingDashboard: React.FC<TradingDashboardProps> = ({
           </button>
           <MetricCard
             label="Portfolio Value"
-            value={`$${currentPortfolio?.totalValue.toLocaleString() || '0'}`}
+            value={`$${(currentPortfolio?.totalValue || 0).toLocaleString()}`}
             change={portfolioPnLPercent}
             trend={portfolioPnL >= 0 ? 'up' : 'down'}
             className="bg-transparent border-none"

@@ -1,5 +1,5 @@
 import { Router, Request, Response, NextFunction } from 'express';
-import { BinanceService } from '../services/binanceService';
+import { BinanceApiDirect } from '../services/binanceApiDirect';
 import { PerformanceMonitor } from '../services/trading';
 import logger from '../utils/logger';
 
@@ -15,7 +15,7 @@ import logger from '../utils/logger';
  */
 
 export default function createPortfolioRoutes(
-  binanceService: BinanceService,
+  binanceService: BinanceApiDirect,
   performanceMonitor: PerformanceMonitor
 ): Router {
   const router = Router();
@@ -362,6 +362,54 @@ export default function createPortfolioRoutes(
 
     } catch (error) {
       logger.error('Error getting P&L timeline', {
+        error: error instanceof Error ? error.message : String(error),
+        requestId: (req as any).requestId,
+        service: 'PortfolioAPI'
+      });
+      next(error);
+    }
+  });
+
+  /**
+   * GET /api/portfolio/history
+   * Get portfolio history for performance tracking
+   */
+  router.get('/history', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { limit = 10, days = 30 } = req.query;
+      
+      const historicalData = performanceMonitor.getHistoricalPerformance(Number(days));
+      const limitedData = historicalData.slice(0, Number(limit));
+
+      const historyData = limitedData.map(data => ({
+        date: data.date instanceof Date ? data.date.toISOString().split('T')[0] : data.date,
+        totalValue: data.totalPnL || 0,
+        dailyPnL: data.dailyPnL || 0,
+        totalTrades: data.totalTrades || 0,
+        winRate: data.winRate || 0,
+        performance: {
+          sharpeRatio: data.sharpeRatio || 0,
+          maxDrawdown: data.maxDrawdown || 0
+        }
+      }));
+
+      res.json({
+        success: true,
+        data: historyData,
+        count: historyData.length,
+        timestamp: new Date().toISOString()
+      });
+
+      logger.info('Portfolio history requested', {
+        requestId: (req as any).requestId,
+        limit: Number(limit),
+        days: Number(days),
+        dataPoints: historyData.length,
+        service: 'PortfolioAPI'
+      });
+
+    } catch (error) {
+      logger.error('Error getting portfolio history', {
         error: error instanceof Error ? error.message : String(error),
         requestId: (req as any).requestId,
         service: 'PortfolioAPI'

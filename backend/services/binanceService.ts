@@ -4,33 +4,28 @@ import { EventEmitter } from 'events';
 import config from '../config/config';
 import logger from '../utils/logger';
 import { 
-  TradingPair, 
-  Order, 
-  Portfolio, 
+  OrderSide, 
+  OrderType, 
   Asset, 
-  CandlestickData, 
-  PriceUpdate, 
-  OrderBook, 
-  Ticker24hr,
-  OrderSide,
-  OrderType,
+  Portfolio, 
+  Ticker24hr, 
+  Kline, 
+  Order, 
+  Trade,
   OrderStatus
 } from '../../src/types';
 
 interface BinanceOrder {
-  symbol: string;
   orderId: number;
-  orderListId: number;
-  clientOrderId: string;
-  transactTime: number;
-  price: string;
+  symbol: string;
+  side: string;
+  type: string;
   origQty: string;
+  price: string;
+  status: string;
+  transactTime: number;
   executedQty: string;
   cummulativeQuoteQty: string;
-  status: string;
-  timeInForce: string;
-  type: string;
-  side: string;
   fills: Array<{
     price: string;
     qty: string;
@@ -41,7 +36,7 @@ interface BinanceOrder {
 
 export class BinanceService extends EventEmitter {
   private client: any;
-  private wsConnections: Map<string, WebSocket> = new Map();
+  private wsConnections: Map<string, any> = new Map();
   private isConnected: boolean = false;
   private reconnectAttempts: number = 0;
   private maxReconnectAttempts: number = 5;
@@ -62,8 +57,8 @@ export class BinanceService extends EventEmitter {
       
       // Configure for testnet if needed
       if (config.binance.testnet) {
-        clientConfig.httpBase = 'https://testnet.binance.vision';
-        clientConfig.wsBase = 'wss://testnet.binance.vision';
+        // binance-api-node에서는 sandbox 옵션 사용
+        clientConfig.sandbox = true;
       }
       
       this.client = Binance(clientConfig);
@@ -78,12 +73,66 @@ export class BinanceService extends EventEmitter {
     }
   }
 
-  public async connect(): Promise<boolean> {
+  /**
+   * Binance API 에러 처리
+   */
+  private handleBinanceError(error: any, operation: string) {
+    const errorCode = error.code || error.response?.data?.code;
+    const errorMsg = error.msg || error.response?.data?.msg || error.message;
+
+    logger.error(`❌ ${operation} 실패:`, {
+      code: errorCode,
+      message: errorMsg,
+      status: error.response?.status
+    });
+
+    // 일반적인 에러 코드별 처리
+    switch (errorCode) {
+      case -2015:
+        logger.error('🔑 API 키 문제: 유효하지 않은 API 키 또는 권한 부족');
+        logger.error('💡 해결 방법:');
+        logger.error('   1. Binance 테스트넷에서 새로운 API 키 생성');
+        logger.error('   2. "Spot & Margin Trading" 권한 활성화');
+        logger.error('   3. .env.local 파일의 API 키 업데이트');
+        logger.error('   4. 서버 재시작');
+        break;
+      case -2014:
+        logger.error('🔑 API 키 형식 오류');
+        break;
+      case -1021:
+        logger.error('⏰ 타임스탬프 오류: 시스템 시간 확인 필요');
+        break;
+      case -1022:
+        logger.error('🔐 서명 오류: Secret 키 확인 필요');
+        break;
+      default:
+        logger.error(`🚨 알 수 없는 오류 (코드: ${errorCode})`);
+    }
+
+    throw error;
+  }
+
+  /**
+   * API 키 유효성 검사
+   */
+  async validateApiKey(): Promise<boolean> {
     try {
-      // Test connection
-      await this.client.ping();
-      
-      // Get server time to check connection
+      await this.client.accountInfo();
+      logger.info('✅ Binance API 키 검증 성공');
+      return true;
+    } catch (error: any) {
+      this.handleBinanceError(error, 'API 키 검증');
+      return false;
+    }
+  }
+
+  public async connect(): Promise<void> {
+    try {
+      if (this.isConnected) {
+        logger.info('Already connected to Binance', { service: 'BinanceService' });
+        return;
+      }
+
       const serverTime = await this.client.time();
       logger.info('Connected to Binance', { 
         serverTime: new Date(serverTime.serverTime).toISOString(),
@@ -93,30 +142,27 @@ export class BinanceService extends EventEmitter {
       this.isConnected = true;
       this.reconnectAttempts = 0;
       this.emit('connected');
-      
-      return true;
-    } catch (error) {
+
+      // 연결 후 API 키 검증
+      await this.validateApiKey();
+
+    } catch (error: any) {
       logger.error('Failed to connect to Binance', { error, service: 'BinanceService' });
-      this.isConnected = false;
-      this.emit('disconnected', error);
+      this.handleBinanceError(error, '연결');
+      this.emit('error', error);
       
       if (this.reconnectAttempts < this.maxReconnectAttempts) {
-        this.scheduleReconnect();
+        this.reconnectAttempts++;
+        logger.info(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`, {
+          service: 'BinanceService'
+        });
+        
+        setTimeout(() => this.connect(), this.reconnectDelay);
+      } else {
+        logger.error('Max reconnection attempts reached', { service: 'BinanceService' });
+        this.emit('maxReconnectAttemptsReached');
       }
-      
-      return false;
     }
-  }
-
-  private scheduleReconnect(): void {
-    this.reconnectAttempts++;
-    logger.info(`Scheduling reconnect attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts}`, {
-      service: 'BinanceService'
-    });
-
-    setTimeout(() => {
-      this.connect();
-    }, this.reconnectDelay * this.reconnectAttempts);
   }
 
   public async getAccountInfo(): Promise<Portfolio> {
@@ -126,38 +172,33 @@ export class BinanceService extends EventEmitter {
       const assets: Asset[] = accountInfo.balances
         .filter((balance: any) => parseFloat(balance.free) > 0 || parseFloat(balance.locked) > 0)
         .map((balance: any) => ({
-          asset: balance.asset,
+          symbol: balance.asset,
+          amount: parseFloat(balance.free) + parseFloat(balance.locked),
           free: parseFloat(balance.free),
           locked: parseFloat(balance.locked),
-          total: parseFloat(balance.free) + parseFloat(balance.locked),
-          btcValue: 0, // Will be calculated separately
-          usdtValue: 0  // Will be calculated separately
+          total: parseFloat(balance.free) + parseFloat(balance.locked)
         }));
 
-      // Calculate total portfolio value (simplified)
-      let totalValue = 0;
-      const usdtAsset = assets.find(asset => asset.asset === 'USDT');
-      if (usdtAsset) {
-        totalValue = usdtAsset.total;
-      }
+      const totalValue = assets.reduce((sum, asset) => sum + asset.amount, 0);
 
       const portfolio: Portfolio = {
         totalValue,
-        totalPnL: 0, // Will be calculated based on historical data
+        assets,
+        timestamp: new Date(),
+        positions: [],
+        totalPnL: 0,
         totalPnLPercentage: 0,
-        availableBalance: usdtAsset?.free || 0,
-        positions: [], // Will be populated separately
-        assets
+        availableBalance: totalValue
       };
 
       return portfolio;
-    } catch (error) {
-      logger.error('Failed to get account info', { error, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, '계정 정보 조회');
       throw error;
     }
   }
 
-  public async getAllTickers(): Promise<TradingPair[]> {
+  public async getAllTickers(): Promise<Ticker24hr[]> {
     try {
       const tickers = await this.client.dailyStats();
       
@@ -165,14 +206,29 @@ export class BinanceService extends EventEmitter {
         symbol: ticker.symbol,
         baseAsset: ticker.symbol.replace(/USDT$|BTC$|ETH$|BNB$/, ''),
         quoteAsset: ticker.symbol.match(/USDT$|BTC$|ETH$|BNB$/)?.[0] || '',
-        price: parseFloat(ticker.lastPrice),
-        change24h: parseFloat(ticker.priceChange),
-        volume24h: parseFloat(ticker.volume),
-        high24h: parseFloat(ticker.highPrice),
-        low24h: parseFloat(ticker.lowPrice)
+        priceChange: ticker.priceChange,
+        priceChangePercent: ticker.priceChangePercent,
+        weightedAvgPrice: ticker.weightedAvgPrice,
+        prevClosePrice: ticker.prevClosePrice,
+        lastPrice: ticker.lastPrice,
+        lastQty: ticker.lastQty,
+        bidPrice: ticker.bidPrice,
+        bidQty: ticker.bidQty,
+        askPrice: ticker.askPrice,
+        askQty: ticker.askQty,
+        openPrice: ticker.openPrice,
+        highPrice: ticker.highPrice,
+        lowPrice: ticker.lowPrice,
+        volume: ticker.volume,
+        quoteVolume: ticker.quoteVolume,
+        openTime: ticker.openTime,
+        closeTime: ticker.closeTime,
+        firstId: ticker.firstId,
+        lastId: ticker.lastId,
+        count: ticker.count
       }));
-    } catch (error) {
-      logger.error('Failed to get all tickers', { error, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, '전체 티커 조회');
       throw error;
     }
   }
@@ -183,6 +239,8 @@ export class BinanceService extends EventEmitter {
       
       return {
         symbol: ticker.symbol,
+        baseAsset: ticker.symbol.replace(/USDT$|BTC$|ETH$|BNB$/, ''),
+        quoteAsset: ticker.symbol.match(/USDT$|BTC$|ETH$|BNB$/)?.[0] || '',
         priceChange: ticker.priceChange,
         priceChangePercent: ticker.priceChangePercent,
         weightedAvgPrice: ticker.weightedAvgPrice,
@@ -204,13 +262,13 @@ export class BinanceService extends EventEmitter {
         lastId: ticker.lastId,
         count: ticker.count
       };
-    } catch (error) {
-      logger.error('Failed to get symbol ticker', { error, symbol, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `심볼 티커 조회 (${symbol})`);
       throw error;
     }
   }
 
-  public async getKlines(symbol: string, interval: string, limit: number = 500): Promise<CandlestickData[]> {
+  public async getKlines(symbol: string, interval: string, limit: number = 500): Promise<Kline[]> {
     try {
       const klines = await this.client.candles({
         symbol,
@@ -231,8 +289,8 @@ export class BinanceService extends EventEmitter {
         takerBuyBaseAssetVolume: parseFloat(kline.takerBuyBaseAssetVolume),
         takerBuyQuoteAssetVolume: parseFloat(kline.takerBuyQuoteAssetVolume)
       }));
-    } catch (error) {
-      logger.error('Failed to get klines', { error, symbol, interval, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `K라인 조회 (${symbol})`);
       throw error;
     }
   }
@@ -243,7 +301,7 @@ export class BinanceService extends EventEmitter {
     startTime: number, 
     endTime: number, 
     limit: number = 1000
-  ): Promise<CandlestickData[]> {
+  ): Promise<Kline[]> {
     try {
       const klines = await this.client.candles({
         symbol,
@@ -266,40 +324,31 @@ export class BinanceService extends EventEmitter {
         takerBuyBaseAssetVolume: parseFloat(kline.takerBuyBaseAssetVolume),
         takerBuyQuoteAssetVolume: parseFloat(kline.takerBuyQuoteAssetVolume)
       }));
-    } catch (error) {
-      logger.error('Failed to get historical klines', { error, symbol, interval, startTime, endTime, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `과거 K라인 조회 (${symbol})`);
       throw error;
     }
   }
 
-  public async getTradeHistory(symbol?: string, limit: number = 100): Promise<Order[]> {
+  public async getRecentTrades(symbol: string, limit: number = 500): Promise<Trade[]> {
     try {
-      if (config.trading.mode === 'PAPER') {
-        // Return empty array for paper trading
-        return [];
-      }
-
-      // For real trading, fetch actual trade history
       const trades = await this.client.myTrades({ symbol, limit });
       
       return trades.map((trade: any) => ({
         id: trade.id.toString(),
         symbol: trade.symbol,
         side: trade.isBuyer ? 'BUY' : 'SELL',
-        type: 'MARKET',
         quantity: parseFloat(trade.qty),
         price: parseFloat(trade.price),
-        status: 'FILLED',
-        createdAt: new Date(trade.time),
-        updatedAt: new Date(trade.time),
-        executedQty: parseFloat(trade.qty),
-        cummulativeQuoteQty: parseFloat(trade.quoteQty),
-        avgPrice: parseFloat(trade.price),
-        pnl: 0 // Would need additional calculation
+        commission: parseFloat(trade.commission),
+        commissionAsset: trade.commissionAsset,
+        time: new Date(trade.time),
+        isBuyer: trade.isBuyer,
+        isMaker: trade.isMaker
       }));
-    } catch (error) {
-      logger.error('Failed to get trade history', { error, symbol, service: 'BinanceService' });
-      return [];
+    } catch (error: any) {
+      this.handleBinanceError(error, `최근 거래 조회 (${symbol})`);
+      throw error;
     }
   }
 
@@ -307,9 +356,9 @@ export class BinanceService extends EventEmitter {
     try {
       const time = await this.client.time();
       return time.serverTime;
-    } catch (error) {
-      logger.error('Failed to get server time', { error, service: 'BinanceService' });
-      return Date.now();
+    } catch (error: any) {
+      this.handleBinanceError(error, '서버 시간 조회');
+      throw error;
     }
   }
 
@@ -317,13 +366,13 @@ export class BinanceService extends EventEmitter {
     try {
       const ticker = await this.client.dailyStats({ symbol });
       return ticker;
-    } catch (error) {
-      logger.error('Failed to get 24hr ticker', { error, symbol, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `24시간 티커 조회 (${symbol})`);
       throw error;
     }
   }
 
-  public async getOrderBook(symbol: string, limit: number = 100): Promise<OrderBook> {
+  public async getOrderBook(symbol: string, limit: number = 100): Promise<any> {
     try {
       const orderBook = await this.client.book({ symbol, limit });
       
@@ -332,62 +381,39 @@ export class BinanceService extends EventEmitter {
         bids: orderBook.bids,
         asks: orderBook.asks
       };
-    } catch (error) {
-      logger.error('Failed to get order book', { error, symbol, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `호가창 조회 (${symbol})`);
       throw error;
     }
   }
 
-  public async placeOrder(
+  public async createOrder(
     symbol: string,
     side: OrderSide,
     type: OrderType,
     quantity: number,
     price?: number,
-    stopPrice?: number
+    stopPrice?: number,
+    timeInForce?: string
   ): Promise<Order> {
     try {
-      if (config.trading.mode === 'PAPER') {
-        // Paper trading - simulate order
-        const simulatedOrder: Order = {
-          id: `PAPER_${Date.now()}`,
-          symbol,
-          side,
-          type,
-          quantity,
-          price,
-          stopPrice,
-          status: 'FILLED',
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          executedQty: quantity,
-          cummulativeQuoteQty: quantity * (price || 0),
-          avgPrice: price
-        };
-
-        logger.info('Paper trade executed', { 
-          order: simulatedOrder, 
-          service: 'BinanceService' 
-        });
-
-        return simulatedOrder;
-      }
-
-      // Real trading
       const orderParams: any = {
         symbol,
-        side: side.toLowerCase(),
-        type: type.toLowerCase(),
+        side,
+        type,
         quantity: quantity.toString()
       };
 
-      if (type === 'LIMIT') {
-        orderParams.price = price?.toString();
-        orderParams.timeInForce = 'GTC';
+      if (price) {
+        orderParams.price = price.toString();
       }
 
-      if (type.includes('STOP')) {
-        orderParams.stopPrice = stopPrice?.toString();
+      if (stopPrice) {
+        orderParams.stopPrice = stopPrice.toString();
+      }
+
+      if (timeInForce) {
+        orderParams.timeInForce = timeInForce;
       }
 
       const result: BinanceOrder = await this.client.order(orderParams);
@@ -409,56 +435,19 @@ export class BinanceService extends EventEmitter {
           result.fills.reduce((sum, fill) => sum + parseFloat(fill.qty), 0) : undefined
       };
 
-      logger.info('Order placed successfully', { 
-        order, 
-        service: 'BinanceService' 
+      logger.info('Order created successfully', {
+        orderId: order.id,
+        symbol: order.symbol,
+        side: order.side,
+        type: order.type,
+        quantity: order.quantity,
+        price: order.price,
+        service: 'BinanceService'
       });
 
       return order;
-    } catch (error) {
-      logger.error('Failed to place order', { 
-        error, 
-        symbol, 
-        side, 
-        type, 
-        quantity, 
-        price, 
-        service: 'BinanceService' 
-      });
-      throw error;
-    }
-  }
-
-  public async cancelOrder(symbol: string, orderId: string): Promise<boolean> {
-    try {
-      if (config.trading.mode === 'PAPER') {
-        logger.info('Paper trade order cancelled', { 
-          symbol, 
-          orderId, 
-          service: 'BinanceService' 
-        });
-        return true;
-      }
-
-      await this.client.cancelOrder({
-        symbol,
-        orderId: parseInt(orderId)
-      });
-
-      logger.info('Order cancelled successfully', { 
-        symbol, 
-        orderId, 
-        service: 'BinanceService' 
-      });
-
-      return true;
-    } catch (error) {
-      logger.error('Failed to cancel order', { 
-        error, 
-        symbol, 
-        orderId, 
-        service: 'BinanceService' 
-      });
+    } catch (error: any) {
+      this.handleBinanceError(error, `주문 생성 (${symbol})`);
       throw error;
     }
   }
@@ -475,175 +464,206 @@ export class BinanceService extends EventEmitter {
         type: order.type as OrderType,
         quantity: parseFloat(order.origQty),
         price: parseFloat(order.price),
-        stopPrice: order.stopPrice ? parseFloat(order.stopPrice) : undefined,
         status: order.status as OrderStatus,
-        timeInForce: order.timeInForce,
         createdAt: new Date(order.time),
         updatedAt: new Date(order.updateTime),
         executedQty: parseFloat(order.executedQty),
         cummulativeQuoteQty: parseFloat(order.cummulativeQuoteQty)
       }));
-    } catch (error) {
-      logger.error('Failed to get open orders', { error, symbol, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `열린 주문 조회 (${symbol || '전체'})`);
       throw error;
     }
   }
 
-  public subscribeToTicker(symbol: string): void {
-    const streamName = `${symbol.toLowerCase()}@ticker`;
-    
-    if (this.wsConnections.has(streamName)) {
-      logger.warn('Already subscribed to ticker', { symbol, service: 'BinanceService' });
-      return;
-    }
-
+  public async cancelOrder(symbol: string, orderId: string): Promise<any> {
     try {
-      const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${streamName}`);
-      
-      ws.on('open', () => {
-        logger.info('Ticker WebSocket connected', { symbol, service: 'BinanceService' });
+      const result = await this.client.cancelOrder({
+        symbol,
+        orderId: parseInt(orderId)
       });
 
-      ws.on('message', (data: string) => {
-        try {
-          const ticker = JSON.parse(data);
-          const priceUpdate: PriceUpdate = {
-            symbol: ticker.s,
-            price: parseFloat(ticker.c),
-            change: parseFloat(ticker.P),
-            changePercent: parseFloat(ticker.P),
-            volume: parseFloat(ticker.v),
-            high: parseFloat(ticker.h),
-            low: parseFloat(ticker.l),
-            timestamp: new Date()
-          };
+      logger.info('Order cancelled successfully', {
+        orderId: result.orderId,
+        symbol: result.symbol,
+        service: 'BinanceService'
+      });
 
-          this.emit('priceUpdate', priceUpdate);
-        } catch (error) {
-          logger.error('Failed to parse ticker data', { error, service: 'BinanceService' });
+      return result;
+    } catch (error: any) {
+      this.handleBinanceError(error, `주문 취소 (${symbol}, ${orderId})`);
+      throw error;
+    }
+  }
+
+  public async subscribeToTicker(symbol: string, callback: (data: any) => void): Promise<void> {
+    try {
+      const stream = this.client.ws.ticker(symbol, callback);
+      this.wsConnections.set(`ticker_${symbol}`, stream);
+      
+      logger.info('Subscribed to ticker stream', { symbol, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `티커 구독 (${symbol})`);
+      throw error;
+    }
+  }
+
+  public async subscribeToKlines(symbol: string, interval: string, callback: (data: any) => void): Promise<void> {
+    try {
+      const stream = this.client.ws.candles(symbol, interval, callback);
+      this.wsConnections.set(`klines_${symbol}_${interval}`, stream);
+      
+      logger.info('Subscribed to klines stream', { symbol, interval, service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, `K라인 구독 (${symbol})`);
+      throw error;
+    }
+  }
+
+  public async subscribeToUserData(callback: (data: any) => void): Promise<void> {
+    try {
+      const stream = this.client.ws.user(callback);
+      this.wsConnections.set('user_data', stream);
+      
+      logger.info('Subscribed to user data stream', { service: 'BinanceService' });
+    } catch (error: any) {
+      this.handleBinanceError(error, '사용자 데이터 구독');
+      throw error;
+    }
+  }
+
+  public async unsubscribe(streamKey: string): Promise<void> {
+    try {
+      const stream = this.wsConnections.get(streamKey);
+      if (stream) {
+        if (typeof stream === 'function') {
+          stream();
+        } else if (stream && typeof stream.close === 'function') {
+          stream.close();
         }
-      });
-
-      ws.on('error', (error) => {
-        logger.error('Ticker WebSocket error', { error, symbol, service: 'BinanceService' });
-      });
-
-      ws.on('close', () => {
-        logger.info('Ticker WebSocket closed', { symbol, service: 'BinanceService' });
-        this.wsConnections.delete(streamName);
-        
-        // Attempt to reconnect after a delay
-        setTimeout(() => {
-          this.subscribeToTicker(symbol);
-        }, 5000);
-      });
-
-      this.wsConnections.set(streamName, ws);
-    } catch (error) {
-      logger.error('Failed to subscribe to ticker', { error, symbol, service: 'BinanceService' });
+        this.wsConnections.delete(streamKey);
+        logger.info('Unsubscribed from stream', { streamKey, service: 'BinanceService' });
+      }
+    } catch (error: any) {
+      this.handleBinanceError(error, `구독 해제 (${streamKey})`);
+      throw error;
     }
   }
 
-  public unsubscribeFromTicker(symbol: string): void {
-    const streamName = `${symbol.toLowerCase()}@ticker`;
-    const ws = this.wsConnections.get(streamName);
-    
-    if (ws) {
-      ws.close();
-      this.wsConnections.delete(streamName);
-      logger.info('Unsubscribed from ticker', { symbol, service: 'BinanceService' });
+  public async disconnect(): Promise<void> {
+    // Close all WebSocket connections
+    for (const [key, stream] of this.wsConnections.entries()) {
+      try {
+        if (typeof stream === 'function') {
+          stream();
+        } else if (stream && typeof stream.close === 'function') {
+          stream.close();
+        }
+        this.wsConnections.delete(key);
+      } catch (error) {
+        logger.error('Failed to close WebSocket connection', { key, error, service: 'BinanceService' });
+      }
     }
+
+    this.isConnected = false;
+    this.emit('disconnected');
+    logger.info('Disconnected from Binance', { service: 'BinanceService' });
   }
 
-  public subscribeToKline(symbol: string, interval: string): void {
-    const streamName = `${symbol.toLowerCase()}@kline_${interval}`;
-    
-    if (this.wsConnections.has(streamName)) {
-      logger.warn('Already subscribed to kline', { symbol, interval, service: 'BinanceService' });
-      return;
-    }
-
+  /**
+   * 서비스 상태 확인
+   */
+  async getServiceStatus() {
     try {
-      const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${streamName}`);
+      // 기본 연결 테스트
+      const serverTime = await this.getServerTime();
       
-      ws.on('open', () => {
-        logger.info('Kline WebSocket connected', { symbol, interval, service: 'BinanceService' });
-      });
+      // API 키 검증
+      const isApiKeyValid = await this.validateApiKey();
 
-      ws.on('message', (data: string) => {
-        try {
-          const klineData = JSON.parse(data);
-          const kline = klineData.k;
-          
-          if (kline.x) { // Only emit completed klines
-            const candlestick: CandlestickData = {
-              openTime: kline.t,
-              open: parseFloat(kline.o),
-              high: parseFloat(kline.h),
-              low: parseFloat(kline.l),
-              close: parseFloat(kline.c),
-              volume: parseFloat(kline.v),
-              closeTime: kline.T,
-              quoteAssetVolume: parseFloat(kline.q),
-              numberOfTrades: kline.n,
-              takerBuyBaseAssetVolume: parseFloat(kline.V),
-              takerBuyQuoteAssetVolume: parseFloat(kline.Q)
-            };
+      return {
+        isConnected: true,
+        serverTime,
+        isTestnet: config.binance.testnet,
+        apiKeyValid: isApiKeyValid,
+        timestamp: Date.now()
+      };
+    } catch (error: any) {
+      logger.error('❌ Binance 서비스 상태 확인 실패:', error.message);
+      return {
+        isConnected: false,
+        serverTime: null,
+        isTestnet: config.binance.testnet,
+        apiKeyValid: false,
+        timestamp: Date.now(),
+        error: error.message
+      };
+    }
+  }
 
-            this.emit('klineUpdate', { symbol, interval, candlestick });
+  /**
+   * 거래 이력 조회
+   */
+  public async getTradeHistory(params: { symbol?: string; limit?: number } = {}): Promise<Trade[]> {
+    try {
+      const { symbol, limit = 500 } = params;
+      
+      let trades: any[];
+      if (symbol) {
+        trades = await this.client.myTrades({ symbol, limit });
+      } else {
+        // 주요 심볼들만 조회
+        const mainSymbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT'];
+        trades = [];
+        for (const sym of mainSymbols) {
+          try {
+            const symTrades = await this.client.myTrades({ symbol: sym, limit: 100 });
+            trades.push(...symTrades);
+          } catch (error) {
+            logger.warn(`Failed to get trades for ${sym}`, { error });
           }
-        } catch (error) {
-          logger.error('Failed to parse kline data', { error, service: 'BinanceService' });
         }
-      });
+      }
 
-      ws.on('error', (error) => {
-        logger.error('Kline WebSocket error', { error, symbol, interval, service: 'BinanceService' });
-      });
-
-      ws.on('close', () => {
-        logger.info('Kline WebSocket closed', { symbol, interval, service: 'BinanceService' });
-        this.wsConnections.delete(streamName);
-        
-        // Attempt to reconnect after a delay
-        setTimeout(() => {
-          this.subscribeToKline(symbol, interval);
-        }, 5000);
-      });
-
-      this.wsConnections.set(streamName, ws);
-    } catch (error) {
-      logger.error('Failed to subscribe to kline', { error, symbol, interval, service: 'BinanceService' });
+      return trades.map((trade: any) => ({
+        id: trade.id.toString(),
+        symbol: trade.symbol,
+        side: trade.isBuyer ? 'BUY' : 'SELL',
+        entryPrice: parseFloat(trade.price),
+        quantity: parseFloat(trade.qty),
+        pnl: parseFloat(trade.quoteQty) * (trade.isBuyer ? -1 : 1),
+        commission: parseFloat(trade.commission),
+        entryTime: new Date(trade.time),
+        status: 'CLOSED'
+      }));
+    } catch (error: any) {
+      logger.error('Failed to get trade history', { error, params, service: 'BinanceService' });
+      throw error;
     }
   }
 
-  public unsubscribeFromKline(symbol: string, interval: string): void {
-    const streamName = `${symbol.toLowerCase()}@kline_${interval}`;
-    const ws = this.wsConnections.get(streamName);
-    
-    if (ws) {
-      ws.close();
-      this.wsConnections.delete(streamName);
-      logger.info('Unsubscribed from kline', { symbol, interval, service: 'BinanceService' });
-    }
-  }
-
+  /**
+   * 연결 상태 확인
+   */
   public isConnectedToBinance(): boolean {
     return this.isConnected;
   }
 
-  public disconnect(): void {
-    // Close all WebSocket connections
-    this.wsConnections.forEach((ws) => {
-      ws.close();
-    });
-    this.wsConnections.clear();
-
-    this.isConnected = false;
-    this.emit('disconnected');
-    
-    logger.info('Disconnected from Binance', { service: 'BinanceService' });
+  /**
+   * 주문 생성 (별칭)
+   */
+  public async placeOrder(
+    symbol: string,
+    side: OrderSide,
+    type: OrderType,
+    quantity: number,
+    price?: number,
+    stopPrice?: number,
+    timeInForce?: string
+  ): Promise<Order> {
+    return this.createOrder(symbol, side, type, quantity, price, stopPrice, timeInForce);
   }
 }
 
 export default BinanceService;
+export const binanceService = new BinanceService();

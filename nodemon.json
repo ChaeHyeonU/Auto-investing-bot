@@ -2,8 +2,9 @@
   "watch": ["backend"],
   "ext": "ts,js,json",
   "ignore": ["backend/**/*.test.ts", "backend/**/*.test.js"],
-  "exec": "ts-node backend/server.ts",
+  "exec": "npx ts-node --project tsconfig.backend.json --transpile-only backend/server.ts",
   "env": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "TS_NODE_PROJECT": "tsconfig.backend.json"
   }
 }

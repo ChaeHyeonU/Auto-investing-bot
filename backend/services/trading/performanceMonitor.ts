@@ -418,7 +418,7 @@ export class PerformanceMonitor extends EventEmitter {
     }
 
     // Profit factor alert
-    if (metrics.totalTrades >= 10 && metrics.profitFactor < this.alertThresholds.minProfitFactor) {
+    if (metrics.totalTrades >= 10 && this.alertThresholds.minProfitFactor && metrics.profitFactor < this.alertThresholds.minProfitFactor) {
       alerts.push({
         type: 'LOW_PROFIT_FACTOR',
         severity: 'HIGH',

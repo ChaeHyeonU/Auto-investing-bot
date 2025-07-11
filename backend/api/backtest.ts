@@ -2,7 +2,7 @@ import { Router, Request, Response, NextFunction } from 'express';
 import { BacktestEngine } from '../services/backtest/backtestEngine';
 import { StrategyFactory } from '../services/backtest/strategyFactory';
 import { PerformanceAnalyzer } from '../services/backtest/performanceAnalyzer';
-import { BinanceService } from '../services/binanceService';
+import { BinanceApiDirect } from '../services/binanceApiDirect';
 import logger from '../utils/logger';
 
 /**
@@ -16,7 +16,7 @@ import logger from '../utils/logger';
  * - Optimizing strategy parameters
  */
 
-export default function createBacktestRoutes(binanceService: BinanceService): Router {
+export default function createBacktestRoutes(binanceService: BinanceApiDirect): Router {
   const router = Router();
   // BacktestEngine will be created with config when needed
   const strategyFactory = new StrategyFactory();

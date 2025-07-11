@@ -4,3 +4,221 @@
 2025-07-04 01:19:29 ERROR [TradingEngine]: Failed to start trading engine
 2025-07-04 06:03:15 ERROR [TradingEngine]: Failed to cancel all orders
 2025-07-04 06:03:15 ERROR [TradingEngine]: Failed to start trading engine
+2025-07-07 06:11:50 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:11:55 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:12:05 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:12:20 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:12:36 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:12:36 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:12:36 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:12:41 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:13:06 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:13:34 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:13:34 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:13:34 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:13:35 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:13:35 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:13:35 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:13:40 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:13:40 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:13:40 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:13:45 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:13:45 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:13:45 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:13:50 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:13:50 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:13:50 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:13:55 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:13:55 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:13:55 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:14:00 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:14:00 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:14:00 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:14:05 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:14:05 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:14:05 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:14:11 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:14:11 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:14:11 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:14:15 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:14:15 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:14:15 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:14:20 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:14:20 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:14:20 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:14:25 ERROR [BinanceService]: Failed to get account info
+2025-07-07 06:14:25 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:14:25 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:124:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27
+2025-07-07 06:42:39 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:44:37 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 06:44:37 ERROR [auto-trading-system]: ❌ 연결 실패: Invalid time value
+2025-07-07 06:44:37 ERROR [auto-trading-system]: 🚨 알 수 없는 오류 (코드: undefined)
+2025-07-07 06:45:35 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:45:35 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:45:47 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:45:47 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:45:48 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:45:48 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:46:43 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:46:43 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:46:43 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:46:43 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:46:48 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:46:48 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:46:53 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:46:53 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:46:58 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:46:58 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:47:03 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:47:03 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:47:08 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:47:08 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:47:13 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:47:13 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 06:47:18 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 06:47:18 ERROR [ErrorHandler]: Unhandled error in request
+TypeError: Cannot read properties of undefined (reading 'toString')
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:43:41
+    at Array.map (<anonymous>)
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:39:36
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-07-07 17:10:36 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 17:10:36 ERROR [auto-trading-system]: ❌ 연결 실패: Invalid time value
+2025-07-07 17:10:36 ERROR [auto-trading-system]: 🚨 알 수 없는 오류 (코드: undefined)
+2025-07-07 17:16:51 ERROR [BinanceService]: Failed to connect to Binance
+2025-07-07 17:16:51 ERROR [auto-trading-system]: ❌ 연결 실패: Invalid time value
+2025-07-07 17:16:51 ERROR [auto-trading-system]: 🚨 알 수 없는 오류 (코드: undefined)
+2025-07-07 17:16:54 ERROR [auto-trading-system]: ❌ 계정 정보 조회 실패: Invalid API-key, IP, or permissions for action.
+2025-07-07 17:16:54 ERROR [auto-trading-system]: 🔑 API 키 문제: 유효하지 않은 API 키 또는 권한 부족
+2025-07-07 17:16:54 ERROR [auto-trading-system]: 💡 해결 방법:
+2025-07-07 17:16:54 ERROR [auto-trading-system]:    1. Binance 테스트넷에서 새로운 API 키 생성
+2025-07-07 17:16:54 ERROR [auto-trading-system]:    2. "Spot & Margin Trading" 권한 활성화
+2025-07-07 17:16:54 ERROR [auto-trading-system]:    3. .env.local 파일의 API 키 업데이트
+2025-07-07 17:16:54 ERROR [auto-trading-system]:    4. 서버 재시작
+2025-07-07 17:16:54 ERROR [PortfolioAPI]: Error getting portfolio information
+2025-07-07 17:16:54 ERROR [ErrorHandler]: Unhandled error in request
+Error: Invalid API-key, IP, or permissions for action.
+    at /Users/chaehyeon-u/newprojects/Auto-investing-bot/node_modules/binance-api-node/dist/http-client.js:102:17
+    at processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async BinanceService.getAccountInfo (/Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/services/binanceService.ts:170:27)
+    at async /Users/chaehyeon-u/newprojects/Auto-investing-bot/backend/api/portfolio.ts:29:27

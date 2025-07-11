@@ -51,9 +51,15 @@ export class RiskManager extends EventEmitter {
   private initializeRiskLimits(): RiskLimits {
     return {
       maxPositionSize: 0.1, // 10% of portfolio
+      maxPositionSizePercent: 10, // 10% of portfolio in percentage
       maxDailyLoss: 0.02, // 2% daily loss limit
       maxOpenPositions: 10, // Maximum 10 open positions
-      maxDrawdown: 0.1 // 10% maximum drawdown
+      maxDrawdown: 0.1, // 10% maximum drawdown
+      maxPortfolioHeat: 25, // 25% maximum portfolio heat
+      maxLeverage: 3, // 3x maximum leverage
+      maxCorrelationRisk: 0.7, // 70% maximum correlation risk
+      maxVolatilityThreshold: 50, // 50% volatility threshold
+      maxConsecutiveLosses: 5 // 5 consecutive losses limit
     };
   }
 
@@ -67,7 +73,11 @@ export class RiskManager extends EventEmitter {
       totalVolume: 0,
       realizedPnL: 0,
       unrealizedPnL: 0,
-      maxDrawdown: 0
+      maxDrawdown: 0,
+      winningTrades: 0,
+      losingTrades: 0,
+      startOfDayBalance: 10000, // Default starting balance
+      avgTradeSize: 0
     };
   }
 

@@ -31,16 +31,17 @@ export interface Order {
 
 export interface Portfolio {
   totalValue: number;
-  totalPnL: number;
-  totalPnLPercentage: number;
+  totalPnL?: number;
+  totalPnLPercentage?: number;
   availableBalance: number;
-  positions: Position[];
+  positions?: Position[];
   assets: Asset[];
   dailyPnL?: number;
   totalTrades?: number;
   winRate?: number;
   maxDrawdown?: number;
   sharpeRatio?: number;
+  timestamp?: Date;
 }
 
 export interface Position {
@@ -57,12 +58,14 @@ export interface Position {
 }
 
 export interface Asset {
-  asset: string;
+  asset?: string;
+  symbol: string;
+  amount: number;
   free: number;
   locked: number;
   total: number;
-  btcValue: number;
-  usdtValue: number;
+  btcValue?: number;
+  usdtValue?: number;
 }
 
 export interface Trade {
@@ -123,6 +126,8 @@ export interface OrderBook {
 
 export interface Ticker24hr {
   symbol: string;
+  baseAsset?: string;
+  quoteAsset?: string;
   priceChange: string;
   priceChangePercent: string;
   weightedAvgPrice: string;
@@ -143,6 +148,20 @@ export interface Ticker24hr {
   firstId: number;
   lastId: number;
   count: number;
+}
+
+export interface Kline {
+  openTime: number;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+  volume: number;
+  closeTime: number;
+  quoteAssetVolume: number;
+  numberOfTrades: number;
+  takerBuyBaseAssetVolume: number;
+  takerBuyQuoteAssetVolume: number;
 }
 
 // Trading Strategy
@@ -514,11 +533,21 @@ export interface DailyRiskStats {
   realizedPnL: number;
   unrealizedPnL: number;
   maxDrawdown: number;
+  winningTrades: number;
+  losingTrades: number;
+  startOfDayBalance: number;
+  avgTradeSize: number;
 }
 
 export interface RiskLimits {
   maxPositionSize: number;
+  maxPositionSizePercent: number;
   maxDailyLoss: number;
   maxOpenPositions: number;
   maxDrawdown: number;
+  maxPortfolioHeat: number;
+  maxLeverage: number;
+  maxCorrelationRisk: number;
+  maxVolatilityThreshold: number;
+  maxConsecutiveLosses: number;
 }

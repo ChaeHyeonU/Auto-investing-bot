@@ -150,7 +150,7 @@ export function useApiPost<T = unknown, R = unknown>() {
 export function usePortfolio() {
   return useApi('/api/portfolio', { 
     immediate: true, 
-    refreshInterval: 5000 // Refresh every 5 seconds
+    refreshInterval: 30000 // Refresh every 30 seconds
   });
 }
 
@@ -158,7 +158,7 @@ export function usePortfolio() {
 export function useTradingStatus() {
   return useApi('/api/trading/status', { 
     immediate: true, 
-    refreshInterval: 2000 // Refresh every 2 seconds
+    refreshInterval: 15000 // Refresh every 15 seconds
   });
 }
 
@@ -166,7 +166,7 @@ export function useTradingStatus() {
 export function useActiveStrategies() {
   return useApi('/api/strategy/active', { 
     immediate: true, 
-    refreshInterval: 10000 // Refresh every 10 seconds
+    refreshInterval: 60000 // Refresh every 60 seconds
   });
 }
 
@@ -174,7 +174,7 @@ export function useActiveStrategies() {
 export function useDashboardAnalytics() {
   return useApi('/api/analytics/dashboard', { 
     immediate: true, 
-    refreshInterval: 5000 // Refresh every 5 seconds
+    refreshInterval: 60000 // Refresh every 60 seconds
   });
 }
 
