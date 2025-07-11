@@ -216,21 +216,21 @@ export const PriceChart: React.FC<PriceChartProps> = ({
   useEffect(() => {
     if (priceData && priceData.type === 'candleUpdate') {
       setCandleData(prev => {
-        const updated = [...prev];
-        const lastCandle = updated[updated.length - 1];
-        
-        // Update last candle or add new one
+        if (!priceData || prev.length === 0) return prev;
+        const lastCandle = prev[prev.length - 1];
         if (lastCandle.timestamp === priceData.timestamp) {
-          updated[updated.length - 1] = priceData.candle;
-        } else {
-          updated.push(priceData.candle);
-          // Keep only last 200 candles
-          if (updated.length > 200) {
-            updated.shift();
+          // Only update if changed
+          if (JSON.stringify(lastCandle) !== JSON.stringify(priceData.candle)) {
+            const updated = prev.slice(0, -1).concat(priceData.candle);
+            return updated;
           }
+          return prev;
+        } else {
+          const updated = prev.length >= 200
+            ? prev.slice(1).concat(priceData.candle)
+            : prev.concat(priceData.candle);
+          return updated;
         }
-        
-        return updated;
       });
     }
   }, [priceData]);

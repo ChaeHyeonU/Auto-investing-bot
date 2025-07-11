@@ -132,7 +132,9 @@ export const MarketOverview: React.FC<MarketOverviewProps> = ({
   // Market statistics
   const gainers = marketData.filter(m => m.changePercent24h > 0).length;
   const losers = marketData.filter(m => m.changePercent24h < 0).length;
-  const avgChange = marketData.reduce((sum, m) => sum + m.changePercent24h, 0) / marketData.length;
+  const avgChange = marketData.length > 0
+    ? marketData.reduce((sum: number, m: typeof marketData[0]) => sum + m.changePercent24h, 0) / marketData.length
+    : 0;
 
   return (
     <div className={`space-y-6 ${className}`}>
